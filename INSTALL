@@ -1,0 +1,7 @@
+Installation Instructions
+*************************
+
+    mkdir build && cd build
+    cmake ..
+    make 
+    
