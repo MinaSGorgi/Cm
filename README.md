@@ -22,12 +22,12 @@ C minor(Cm) is a mini version of the C programming language using Flex and Bison
 |`*`     |Multiplies both operands                                   |
 |`/`     |Divides numerator by de-numerator                          |
 |`%`     |Modulus Operator and remainder of after an integer division|
-|`==`    |Checks if the values of two operands are equal             |
 
 ### Relational
 
 |Operator|Description                                                                            |
 |:------:|---------------------------------------------------------------------------------------|
+|`==`    |Checks if the values of two operands are equal                                         |
 |`!=`    |Checks if the values of two operands are not equal                                     |
 |`>`     |Checks if the value of left operand is greater than the value of right operand         |
 |`<`     |Checks if the value of left operand is less than the value of right operand            |
