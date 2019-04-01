@@ -47,3 +47,16 @@ C minor(Cm) is a mini version of the C programming language using Flex and Bison
 |Operator|Description                                                 |
 |:------:|------------------------------------------------------------|
 |`=`     |Assigns values from right side operands to left side operand|
+
+## Operators Precedence
+
+|Operator   |Associativity|
+|:---------:|-------------|
+|`!`        |Right to left|
+|`* / %`    |Left to right|
+|`+ -`      |Left to right|
+|`< <= > >=`|Left to right|
+|`== !=`    |Left to right|
+|`&&`       |Left to right|
+|`\|\|`     |Left to right|
+|`=`        |Right to left|
