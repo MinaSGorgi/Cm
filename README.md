@@ -39,7 +39,7 @@ C minor(Cm) is a mini version of the C programming language using Flex and Bison
 |Operator|Description         |
 |:------:|--------------------|
 |`&&`    |Logical AND operator|
-|`||`    |Logical OR operator |
+|`\|\|`  |Logical OR operator |
 |`!`     |Logical NOT operator|
 
 ### Assignment
