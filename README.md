@@ -60,3 +60,23 @@ C minor(Cm) is a mini version of the C programming language using Flex and Bison
 |`&&`       |Left to right|
 |`\|\|`     |Left to right|
 |`=`        |Right to left|
+
+## Assembly Quadruples
+
+|Quadruple          |Description              |
+|-------------------|-------------------------|
+|`OR  $1, $2, $3`   |$3 = $1 \|\| $2          |
+|`NOT $1, $2`       |$2 = !$1                 |
+|`AND $1, $2, $3`   |$3 = $1 && $2            |
+|`ADD $1, $2, $3`   |$3 = $1 + $2             |
+|`SUB $1, $2, $3`   |$3 = $1 - $2             |
+|`MUL $1, $2, $3`   |$3 = $1 * $2             |
+|`DIV $1, $2, $3`   |$3 = $1 / $2             |
+|`MOD $1, $2, $3`   |$3 = $1 % $2             |
+|`MOV $1, $2`       |$2 = $1                  |
+|`JE  $1, $2, label`|Jump to label if $1 == $2|
+|`JG  $1, $2, label`|Jump to label if $1 > $2 |
+|`JL  $1, $2, label`|Jump to label if $1 < $2 |
+|`JNE $1, $2, label`|Jump to label if $1 != $2|
+|`JGE $1, $2, label`|Jump to label if $1 >= $2|
+|`JLE $1, $2, label`|Jump to label if $1 <= $2|
