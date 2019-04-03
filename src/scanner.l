@@ -14,7 +14,6 @@
 [ \t\n]					        ;    /* Skip whitespaces */
 
 [a-zA-Z_][a-zA-Z0-9_]*          STRING_TOKEN(TIDENTIFIER)
-"'.'"                           STRING_TOKEN(TCHAR)
 [0-9]+					        STRING_TOKEN(TINTEGER)
 [0-9]+\.[0-9]* 			        STRING_TOKEN(TDOUBLE)
 
