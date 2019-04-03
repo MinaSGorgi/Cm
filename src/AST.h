@@ -2,11 +2,7 @@
 #define AST_h
 
 #include <string>
-
-
-class NStatement;
-class NExpression;
-class NVariableDeclaration;
+#include <vector>
 
 
 class Node {
@@ -67,6 +63,12 @@ public:
 	NExpression& rhs;
 	NAssignment(NIdentifier& lhs, NExpression& rhs) : 
 		lhs(lhs), rhs(rhs) { }
+};
+
+class NBlock : public NExpression {
+public:
+    std::vector<NStatement*> statements;
+    NBlock() { }
 };
 
 class NExpressionStatement : public NStatement {
