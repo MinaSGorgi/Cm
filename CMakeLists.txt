@@ -27,4 +27,8 @@ IF(FLEX_FOUND)
     )
 ENDIF()
 
-ADD_EXECUTABLE(Cm ${BisonOutput} ${FlexOutput})
+SET(IncludeFiles ${CMAKE_SOURCE_DIR}/src/asm.h ${CMAKE_SOURCE_DIR}/src/AST.h
+                 ${CMAKE_SOURCE_DIR}/src/context.h)
+SET(SrcFiles ${BisonOutput} ${FlexOutput} ${CMAKE_SOURCE_DIR}/src/AST.cpp)
+
+ADD_EXECUTABLE(Cm ${IncludeFiles} ${SrcFiles})
