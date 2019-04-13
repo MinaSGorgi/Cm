@@ -17,6 +17,14 @@
 [0-9]+					        STRING_TOKEN(TINTEGER)
 [0-9]+\.[0-9]* 			        STRING_TOKEN(TDOUBLE)
 
+"("	          					INT_TOKEN(TLPAREN);
+")"					          	INT_TOKEN(TRPAREN);
+"{"         					INT_TOKEN(TLBRACE);
+"}"					          	INT_TOKEN(TRBRACE);
+
+"return"				        INT_TOKEN(TRETURN);
+","				          		INT_TOKEN(TCOMMA);
+
 "+"				          		INT_TOKEN(TPLUS)
 "-"		          				INT_TOKEN(TMINUS)
 "*"		          				INT_TOKEN(TMUL)

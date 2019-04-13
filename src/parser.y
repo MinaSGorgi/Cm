@@ -18,11 +18,15 @@
 	NExpression *_pexpression;
 	NStatement *_pstatement;
 	NIdentifier *_pidentifier;
-	NVariableDeclaration *_pvarDeceleration;
+	NVariableDeclaration *_pvar_deceleration;
+	std::vector<NVariableDeclaration*> *_pvardecl_vec;
+	std::vector<NExpression*> *_pexpr_vec;
 }
 
 /* Tokens definitions */
 %token <_pstring> TIDENTIFIER TCHAR TINTEGER TDOUBLE
+%token <_int> TLPAREN TRPAREN TLBRACE TRBRACE
+%token <_int> TRETURN TCOMMA
 %token <_int> TPLUS TMINUS TMUL TDIV TMOD
 %token <_int> TEQUAL TNOT_EQUAL TGREATER TLESS TGREATER_EGQUAL TLESS_EQUAL
 %token <_int> TAND TOR TNOT
@@ -31,11 +35,13 @@
 /* Define the type of nonterminal symbols.
    The types refer to the %union declaration above.
  */
-%type <_pblock> program statements
-%type <_pidentifier> identifier
+%type <_pblock> program statements block
+%type <_pstatement> statement var_deceleration func_deceleration
+%type <_pvardecl_vec> funcdecl_args
+%type <_pexpr_vec> call_args
 %type <_pexpression> expression numeric
-%type <_pstatement> statement varDeceleration
-%type <_int> comparison
+%type <_pidentifier> identifier
+%type <_int> binary_operation
 
 /* Operators precedence */
 %right TASSIGN
@@ -58,13 +64,27 @@ statements : statement { $$ = new NBlock(); $$->statements.push_back($<_pstateme
 	  	   | statements statement { $1->statements.push_back($<_pstatement>2); }
 	  	   ;
 
-statement : varDeceleration
+statement : var_deceleration | func_deceleration
 	 	  | expression { $$ = new NExpressionStatement(*$1); }
+		  | TRETURN expression { $$ = new NReturnStatement(*$2); }
      	  ;
 
-varDeceleration : identifier identifier { $$ = new NVariableDeclaration(*$1, *$2); }
-		 		| identifier identifier TASSIGN expression { $$ = new NVariableDeclaration(*$1, *$2, $4); }
-		 		;
+block : TLBRACE statements TRBRACE { $$ = $2; }
+	  | TLBRACE TRBRACE { $$ = new NBlock(); }
+	  ;
+
+var_deceleration : identifier identifier { $$ = new NVariableDeclaration(*$1, *$2); }
+		 		 | identifier identifier TASSIGN expression { $$ = new NVariableDeclaration(*$1, *$2, $4); }
+		 		 ;
+
+func_deceleration : identifier identifier TLPAREN funcdecl_args TRPAREN block 
+					{ $$ = new NFunctionDeclaration(*$1, *$2, *$4, *$6); delete $4; }
+		  		  ;
+
+funcdecl_args : /*blank*/  { $$ = new VariableList(); }
+		  	  | var_deceleration { $$ = new VariableList(); $$->push_back($<_pvar_deceleration>1); }
+		  	  | funcdecl_args TCOMMA var_deceleration { $1->push_back($<_pvar_deceleration>3); }
+		      ;
 
 identifier : TIDENTIFIER { $$ = new NIdentifier(*$1); delete $1; }
 	  	   ;
@@ -72,20 +92,24 @@ identifier : TIDENTIFIER { $$ = new NIdentifier(*$1); delete $1; }
 numeric : TINTEGER { $$ = new NInteger(atol($1->c_str())); delete $1; }
 		| TDOUBLE { $$ = new NDouble(atof($1->c_str())); delete $1; }
 		;
-	
-expression : numeric
+
+expression : identifier TASSIGN expression { $$ = new NAssignment(*$<_pidentifier>1, *$3); }
+	 	   | identifier TLPAREN call_args TRPAREN { $$ = new NFunctionCall(*$1, *$3); delete $3; }
 	 	   | identifier { $<_pidentifier>$ = $1; }
-		   | identifier TASSIGN expression { $$ = new NAssignment(*$<_pidentifier>1, *$3); }
-           | expression TMUL expression { $$ = new NBinaryOperator(*$1, $2, *$3); }
-           | expression TDIV expression { $$ = new NBinaryOperator(*$1, $2, *$3); }
-           | expression TPLUS expression { $$ = new NBinaryOperator(*$1, $2, *$3); }
-           | expression TMINUS expression { $$ = new NBinaryOperator(*$1, $2, *$3); }
- 	       | expression comparison expression { $$ = new NBinaryOperator(*$1, $2, *$3); }
-	       ;
+	 	   | numeric
+           | expression binary_operation expression { $$ = new NBinaryOperator(*$1, $2, *$3); }
+     	   | TLPAREN expression TRPAREN { $$ = $2; }
+	 	   ;
 
-comparison : TEQUAL | TNOT_EQUAL | TGREATER | TLESS | TGREATER_EGQUAL | TLESS_EQUAL
-		   ;
+call_args : /*blank*/  { $$ = new ExpressionList(); }
+		  | expression { $$ = new ExpressionList(); $$->push_back($1); }
+		  | call_args TCOMMA expression  { $1->push_back($3); }
+		  ;
 
+binary_operation : TPLUS | TMINUS | TMUL | TDIV | TMOD
+				 | TEQUAL | TNOT_EQUAL | TGREATER | TLESS | TGREATER_EGQUAL | TLESS_EQUAL
+				 | TAND | TOR
+				 ;
 %%
 
 int main(int argc, char **argv) {
