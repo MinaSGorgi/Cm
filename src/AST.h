@@ -12,14 +12,14 @@ class NStatement;
 class NExpression;
 class NVariableDeclaration;
 
-typedef std::vector<NStatement*> StatementList;
-typedef std::vector<NExpression*> ExpressionList;
-typedef std::vector<NVariableDeclaration*> VariableList;
+typedef std::vector<NStatement*> NStatementList;
+typedef std::vector<NExpression*> NExpressionList;
+typedef std::vector<NVariableDeclaration*> NVariableList;
 
 class Node {
 public:
-	virtual ~Node() {}
-	virtual Quadruple* generateQuadruple(Context& context) { return NULL; }
+	virtual ~Node() { }
+	virtual Quadruple* generateQuadruple(Context& context) const { return NULL; }
 };
 
 class NExpression : public Node {
@@ -30,115 +30,113 @@ class NStatement : public Node {
 
 class NChar : public NExpression {
 public:
-	char value;
+	const char value;
 	NChar(char value) : value(value) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple (Context& context) const;
 };
 
 class NInteger : public NExpression {
 public:
-	int value;
+	const int value;
 	NInteger(int value) : value(value) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NDouble : public NExpression {
 public:
-	double value;
+	const double value;
 	NDouble(double value) : value(value) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NIdentifier : public NExpression {
 public:
-	std::string name;
+	const std::string name;
 	NIdentifier(const std::string& name) : name(name) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NBinaryOperator : public NExpression {
 public:
-	int op;
-	NExpression& lhs;
-	NExpression& rhs;
-	NBinaryOperator(NExpression& lhs, int op, NExpression& rhs) :
-		lhs(lhs), rhs(rhs), op(op) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	const int op;
+	const NExpression lhs, rhs;
+	NBinaryOperator(const NExpression& lhs, int op, const NExpression& rhs) :
+		op(op), lhs(lhs), rhs(rhs) { }
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NUnaryOperator : public NExpression {
 public:
-	int op;
-	NExpression& expr;
-	NUnaryOperator(int op, NExpression& expr) :
-		op(op), expr(expr) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	const int op;
+	const NExpression expression;
+	NUnaryOperator(int op, const NExpression& expression) :
+		op(op), expression(expression) { }
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NAssignment : public NExpression {
 public:
-	NIdentifier& lhs;
-	NExpression& rhs;
-	NAssignment(NIdentifier& lhs, NExpression& rhs) : 
+	const NIdentifier lhs;
+	const NExpression rhs;
+	NAssignment(const NIdentifier& lhs, const NExpression& rhs) : 
 		lhs(lhs), rhs(rhs) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NBlock : public NExpression {
 public:
-    StatementList statements;
+    NStatementList statements;
     NBlock() { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NExpressionStatement : public NStatement {
 public:
-	NExpression& expression;
-	NExpressionStatement(NExpression& expression) : 
+	const NExpression expression;
+	NExpressionStatement(const NExpression& expression) : 
 		expression(expression) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NFunctionCall : public NExpression {
 public:
-	const NIdentifier& id;
-	ExpressionList arguments;
-	NFunctionCall(const NIdentifier& id, ExpressionList& arguments) :
+	const NIdentifier id;
+	NExpressionList arguments;
+	NFunctionCall(const NIdentifier& id, NExpressionList& arguments) :
 		id(id), arguments(arguments) { }
 	NFunctionCall(const NIdentifier& id) : id(id) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NReturnStatement : public NStatement {
 public:
-	NExpression& expression;
-	NReturnStatement(NExpression& expression) : 
+	const NExpression expression;
+	NReturnStatement(const NExpression& expression) : 
 		expression(expression) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NVariableDeclaration : public NStatement {
 public:
-	const NIdentifier& type;
-	NIdentifier& id;
-	NExpression *assignmentExpr;
+	const NIdentifier type;
+	const NIdentifier id;
+	const NExpression *assignmentExpr;
 	NVariableDeclaration(const NIdentifier& type, NIdentifier& id) :
-		type(type), id(id) { assignmentExpr = NULL; }
+		type(type), id(id), assignmentExpr(NULL) { }
 	NVariableDeclaration(const NIdentifier& type, NIdentifier& id, NExpression *assignmentExpr) :
 		type(type), id(id), assignmentExpr(assignmentExpr) { }
-	virtual Quadruple* generateQuadruple(Context& context);
+	virtual Quadruple* generateQuadruple(Context& context) const;
 };
 
 class NFunctionDeclaration : public NStatement {
 public:
-	const NIdentifier& type;
-	const NIdentifier& id;
-	VariableList arguments;
-	NBlock& block;
+	const NIdentifier type;
+	const NIdentifier id;
+	NVariableList arguments;
+	const NBlock block;
 	NFunctionDeclaration(const NIdentifier& type, const NIdentifier& id, 
-			const VariableList& arguments, NBlock& block) :
+			const NVariableList& arguments, NBlock& block) :
 		type(type), id(id), arguments(arguments), block(block) { }
-	virtual Quadruple* generateQuadruple(Context& context);
 };
 
 #endif /* AST_H */

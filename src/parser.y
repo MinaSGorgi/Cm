@@ -81,8 +81,8 @@ func_deceleration : identifier identifier TLPAREN funcdecl_args TRPAREN block
 					{ $$ = new NFunctionDeclaration(*$1, *$2, *$4, *$6); delete $4; }
 		  		  ;
 
-funcdecl_args : /*blank*/  { $$ = new VariableList(); }
-		  	  | var_deceleration { $$ = new VariableList(); $$->push_back($<_pvar_deceleration>1); }
+funcdecl_args : /*blank*/  { $$ = new NVariableList(); }
+		  	  | var_deceleration { $$ = new NVariableList(); $$->push_back($<_pvar_deceleration>1); }
 		  	  | funcdecl_args TCOMMA var_deceleration { $1->push_back($<_pvar_deceleration>3); }
 		      ;
 
@@ -101,8 +101,8 @@ expression : identifier TASSIGN expression { $$ = new NAssignment(*$<_pidentifie
      	   | TLPAREN expression TRPAREN { $$ = $2; }
 	 	   ;
 
-call_args : /*blank*/  { $$ = new ExpressionList(); }
-		  | expression { $$ = new ExpressionList(); $$->push_back($1); }
+call_args : /*blank*/  { $$ = new NExpressionList(); }
+		  | expression { $$ = new NExpressionList(); $$->push_back($1); }
 		  | call_args TCOMMA expression  { $1->push_back($3); }
 		  ;
 

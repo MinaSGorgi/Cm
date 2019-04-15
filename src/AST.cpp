@@ -1,53 +1,53 @@
 #include "../src/AST.h"
 
-Quadruple* NChar::generateQuadruple(Context& context) {
+Quadruple* NChar::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NInteger::generateQuadruple(Context& context) {
+Quadruple* NInteger::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NDouble::generateQuadruple(Context& context) {
+Quadruple* NDouble::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NIdentifier::generateQuadruple(Context& context) {
+Quadruple* NIdentifier::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NBinaryOperator::generateQuadruple(Context& context) {
+Quadruple* NBinaryOperator::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NUnaryOperator::generateQuadruple(Context& context) {
+Quadruple* NUnaryOperator::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NAssignment::generateQuadruple(Context& context) {
+Quadruple* NAssignment::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NBlock::generateQuadruple(Context& context) {
+Quadruple* NBlock::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NExpressionStatement::generateQuadruple(Context& context) {
+Quadruple* NExpressionStatement::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NFunctionCall::generateQuadruple(Context& context) {
+Quadruple* NFunctionCall::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NReturnStatement::generateQuadruple(Context& context) {
+Quadruple* NReturnStatement::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NVariableDeclaration::generateQuadruple(Context& context) {
+Quadruple* NVariableDeclaration::generateQuadruple(Context& context) const {
     return NULL;
 }
 
-Quadruple* NFunctionDeclaration::generateQuadruple(Context& context) {
+Quadruple* NFunctionDeclaration::generateQuadruple(Context& context) const {
     return NULL;
 }
