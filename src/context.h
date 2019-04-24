@@ -5,20 +5,32 @@
 #include <map>
 
 
-class Node;
+enum SymbolType {
+    CHAR,
+    INT,
+    DOUBLE,
+    VOID,
+    NONE
+};
 
-typedef std::string Reference;
-typedef std::map<std::string, Reference> SymbolTable;
+class Symbol {
+public:
+    const std::string reference;
+    const SymbolType type;
+
+    Symbol(std::string reference, SymbolType type): reference(reference), type(type) { }
+};
+
+typedef std::map<std::string, Symbol> SymbolTable;
 
 class Context {
-    int referenceIndex;
     std::deque<SymbolTable> symbolTables;
 
 public:
-    Context() { referenceIndex = 0; }
+    Context() { }
 
-    Reference get_reference(const std::string& local) const;
-    void insert_reference(const std::string& local);
+    Symbol get_symbol(const std::string& name) const;
+    void insert_symbol(const std::string& name, const SymbolType& type);
 };
 
 #endif /* CONTEXT_H */

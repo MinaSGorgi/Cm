@@ -2,23 +2,25 @@
 #include "../src/errors.h"
 
 
-Reference Context::get_reference(const std::string& local) const {
+Symbol Context::get_symbol(const std::string& name) const {
     std::deque<SymbolTable>::const_iterator table;
-    std::map<std::string, Reference>::const_iterator reference;
+    SymbolTable::const_iterator symbol;
 
     for(table = symbolTables.end(); table != symbolTables.begin(); --table) {
-        reference = table->find(local);
-        if(reference != table->end()) {
-            return reference->second;
+        symbol = table->find(name);
+        if(symbol != table->end()) {
+            return symbol->second;
         }
     }
 
-    throw new UndefinedReference(local);
+    throw new UndefinedReference(name);
 }
 
-void Context::insert_reference(const std::string& local) {
-    if(symbolTables.end()->find(local) != symbolTables.end()->end()) {
-        throw new MultipleDefinition(local);
+void Context::insert_symbol(const std::string& name, const SymbolType& type) {
+    if(symbolTables.end()->find(name) != symbolTables.end()->end()) {
+        throw new MultipleDefinition(name);
     }
-    symbolTables.end()->insert(local, "%" + local);
+
+    std::pair<std::string, Symbol> symbol(name, Symbol(name, type));
+    symbolTables.end()->insert(symbol);
 }

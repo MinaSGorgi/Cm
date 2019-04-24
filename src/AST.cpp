@@ -3,58 +3,58 @@
 #include <iostream>
 
 
-Reference NChar::generateQuadruple(Context& context) const {
+Symbol NChar::generateQuadruple(Context& context) const {
     std::cout << "Generating NChar: " << value << std::endl;
-    return Reference(1, value);
+    return Symbol(std::string(1, value), CHAR);
 }
 
-Reference NInteger::generateQuadruple(Context& context) const {
+Symbol NInteger::generateQuadruple(Context& context) const {
     std::cout << "Generating NInteger: " << value << std::endl;
-    return std::to_string(value);
+    return Symbol(std::to_string(value), INT);
 }
 
-Reference NDouble::generateQuadruple(Context& context) const {
+Symbol NDouble::generateQuadruple(Context& context) const {
     std::cout << "Generating NDouble: " << value << std::endl;
-    return std::to_string(value);
+    return Symbol(std::to_string(value), DOUBLE);
 }
 
-Reference NIdentifier::generateQuadruple(Context& context) const {
+Symbol NIdentifier::generateQuadruple(Context& context) const {
     std::cout << "Generating NIdentifier: " << name << std::endl;
-    return context.get_reference(name);
+    return context.get_symbol(name);
 }
 
-Reference NBinaryOperator::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NBinaryOperator::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
 
-Reference NUnaryOperator::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NUnaryOperator::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
 
-Reference NAssignment::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NAssignment::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
 
-Reference NBlock::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NBlock::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
 
-Reference NExpressionStatement::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NExpressionStatement::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
 
-Reference NFunctionCall::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NFunctionCall::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
 
-Reference NReturnStatement::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NReturnStatement::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
 
-Reference NVariableDeclaration::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NVariableDeclaration::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
 
-Reference NFunctionDeclaration::generateQuadruple(Context& context) const {
-    return NULL;
+Symbol NFunctionDeclaration::generateQuadruple(Context& context) const {
+    return Symbol("", NONE);
 }
