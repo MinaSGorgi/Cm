@@ -1,13 +1,14 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+SET(CMAKE_CXX_STANDARD 11)
 PROJECT(Cm)
 
 FIND_PACKAGE(BISON REQUIRED)
-SET(BisonOutput ${CMAKE_SOURCE_DIR}/build/parser.c)
+SET(BisonOutput ${CMAKE_SOURCE_DIR}/build/parser.cpp)
 IF(BISON_FOUND)
     ADD_CUSTOM_COMMAND(
       OUTPUT ${BisonOutput}
       COMMAND ${BISON_EXECUTABLE}
-              --defines=${CMAKE_SOURCE_DIR}/build/parser.h
+              --defines=${CMAKE_SOURCE_DIR}/build/parser.hpp
               --output=${BisonOutput}
               ${CMAKE_SOURCE_DIR}/src/parser.y
       COMMENT "Generating parser.cpp"
@@ -15,7 +16,7 @@ IF(BISON_FOUND)
 ENDIF()
 
 FIND_PACKAGE(FLEX REQUIRED)
-SET(FlexOutput ${CMAKE_SOURCE_DIR}/build/scanner.c)
+SET(FlexOutput ${CMAKE_SOURCE_DIR}/build/scanner.cpp)
 IF(FLEX_FOUND)
     ADD_CUSTOM_COMMAND(
       OUTPUT ${FlexOutput}
@@ -29,7 +30,7 @@ ENDIF()
 SET(IncludeDir ${CMAKE_SOURCE_DIR}/include)
 SET(SrcDir ${CMAKE_SOURCE_DIR}/src)
 
-SET(IncludeFiles ${IncludeDir}/calc3.h)
-SET(SrcFiles ${BisonOutput} ${FlexOutput} ${SrcDir}/compiler.c)
+SET(IncludeFiles ${IncludeDir}/calc3.hpp)
+SET(SrcFiles ${BisonOutput} ${FlexOutput} ${SrcDir}/compiler.cpp)
 
 ADD_EXECUTABLE(Cm ${IncludeFiles} ${SrcFiles})

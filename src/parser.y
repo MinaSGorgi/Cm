@@ -2,7 +2,7 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <stdarg.h>
-    #include "../include/calc3.h"
+    #include "../include/calc3.hpp"
 
     /* prototypes */
     nodeType *opr(int oper, int nops, ...);
@@ -11,7 +11,7 @@
     void freeNode(nodeType *p);
     int ex(nodeType *p);
     int yylex(void);
-    void yyerror(char *s);
+    void yyerror(const char *s) { printf("Error: %s\n", s); }
     int sym[26]; /* symbol table */
 %}
 
@@ -83,7 +83,7 @@ expr:
 nodeType *con(int value) {
     nodeType *p;
     /* allocate node */
-    if ((p = malloc(sizeof(nodeType))) == NULL)
+    if ((p = new nodeType()) == NULL)
         yyerror("out of memory");
     /* copy information */
     p->type = typeCon;
@@ -94,7 +94,7 @@ nodeType *con(int value) {
 nodeType *id(int i) {
     nodeType *p;
     /* allocate node */
-    if ((p = malloc(sizeof(nodeType))) == NULL)
+    if ((p = new nodeType()) == NULL)
         yyerror("out of memory");
     /* copy information */
     p->type = typeId;
@@ -107,9 +107,9 @@ nodeType *opr(int oper, int nops, ...) {
     nodeType *p;
     int i;
     /* allocate node */
-    if ((p = malloc(sizeof(nodeType))) == NULL)
+    if ((p = new nodeType()) == NULL)
         yyerror("out of memory");
-    if ((p->opr.op = malloc(nops * sizeof(nodeType))) == NULL)
+    if ((p->opr.op = new nodeType*[nops]) == NULL)
         yyerror("out of memory");
     /* copy information */
     p->type = typeOpr;

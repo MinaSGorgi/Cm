@@ -1,7 +1,7 @@
 %{
     #include <stdlib.h>
-    #include "../include/calc3.h"
-    #include "parser.h"
+    #include "../include/calc3.hpp"
+    #include "parser.hpp"
     void yyerror(char *);
 %}
 
@@ -20,7 +20,7 @@
 "print"             return PRINT;
 
 [ \t\n]+            ; /* ignore whitespace */
-.                   yyerror("Unknown character");
+.                   yyerror((char *)"Unknown character");
 %%
 
 int yywrap(void) {

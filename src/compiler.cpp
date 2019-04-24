@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "../include/calc3.h"
-#include "../build/parser.h"
+#include "../include/calc3.hpp"
+#include "../build/parser.hpp"
 
 static int lbl;
 
