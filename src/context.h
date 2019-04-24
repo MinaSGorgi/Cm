@@ -31,6 +31,8 @@ public:
 
     Symbol get_symbol(const std::string& name) const;
     void insert_symbol(const std::string& name, const SymbolType& type);
+    void new_scope() { symbolTables.push_back(SymbolTable()); }
+    void delete_scope() { symbolTables.pop_back(); }
 };
 
 #endif /* CONTEXT_H */
