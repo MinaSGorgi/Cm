@@ -1,3 +1,6 @@
+#ifndef CALC3_H
+#define CALC3_H
+
 typedef enum { typeCon, typeId, typeOpr } nodeEnum;
 
 /* constants */
@@ -27,3 +30,5 @@ typedef struct nodeTypeTag {
 } nodeType;
 
 extern int sym[26];
+
+#endif /* CALC3_H */
