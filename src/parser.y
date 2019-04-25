@@ -35,7 +35,7 @@ program:
     ;
 
 function:
-    function stmt { $2->generateCode(); }
+    function stmt { $2->generateCode(); delete $2;}
     | /* NULL */
     ;
 
