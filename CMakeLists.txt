@@ -15,6 +15,7 @@ IF(BISON_FOUND)
       COMMAND ${BISON_EXECUTABLE}
               --defines=${BuildDir}/parser.hpp
               --output=${BisonOutput}
+              -v
               ${SrcDir}/parser.y
       COMMENT "Generating parser.cpp"
     )

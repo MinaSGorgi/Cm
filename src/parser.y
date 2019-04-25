@@ -13,7 +13,6 @@
     #include "../include/AST.hpp"
     /* prototypes */
     OperationNode *opr(int oper, int nops, ...);
-    void scan_string(const char* str);
     int yylex(void);
 }
 
@@ -24,13 +23,12 @@
     string *text; /* yytext */
 };
 
-%type <nPtr> stmt expr stmt_list
-%type <text> binary_operation
-
 %token <iValue> INTEGER
 %token <sIndex> VARIABLE
 %token <text> TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT 
 %token WHILE IF
+
+%type <nPtr> stmt expr stmt_list
 
 %nonassoc IFX
 %nonassoc ELSE
@@ -68,14 +66,18 @@ stmt_list:
 expr:
     INTEGER { $$ = new ConstantNode($1); }
     | VARIABLE { $$ = new IdentifierNode($1); }
-    //| TSUB expr %prec UMINUS { $$ = opr(UMINUS, 1, $2); }
-    | expr binary_operation expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TADD expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TSUB expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TMUL expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TDIV expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TGE expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TLE expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TEQ expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TNE expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TLT expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
+    | expr TGT expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
     | '(' expr ')' { $$ = $2; }
     ;
-
-binary_operation:
-                TADD | TSUB | TMUL | TDIV | TGE | TLE | TEQ | TNE | TLT | TGT
-                ;     
 %%
 
 OperationNode *opr(int oper, int nops, ...) {
@@ -90,8 +92,4 @@ OperationNode *opr(int oper, int nops, ...) {
 
 void yyerror(char const *s) {
     printf("Error: %s\n", s);
-}
-
-void scan_string(const char* str) {
-    //yy_scan_string(str);
 }
