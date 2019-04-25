@@ -15,7 +15,7 @@
 0                   SAVE_TOKEN(iValue, atoi(yytext), INTEGER)
 [1-9][0-9]*         SAVE_TOKEN(iValue, atoi(yytext), INTEGER)
 
-[=();{}.]            return *yytext;
+[=();{}.]           return *yytext;
 
 "-"                 SAVE_TOKEN(text, new string("SUB"), TSUB)
 "+"                 SAVE_TOKEN(text, new string("ADD"), TADD)

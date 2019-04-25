@@ -3,15 +3,19 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string>
-    #include "../include/AST.hpp"
     using namespace std;
 
-    /* prototypes */
-    OperationNode *opr(int oper, int nops, ...);
-    int yylex(void);
     void yyerror(char const *s);
     int sym[26]; /* symbol table */
 %}
+
+%code requires {
+    #include "../include/AST.hpp"
+    /* prototypes */
+    OperationNode *opr(int oper, int nops, ...);
+    void scan_string(const char* str);
+    int yylex(void);
+}
 
 %union {
     int iValue; /* integer value */
@@ -37,7 +41,7 @@
 
 %%
 program:
-    function { exit(0); }
+    function { YYACCEPT; }
     ;
 
 function:
@@ -64,7 +68,7 @@ stmt_list:
 expr:
     INTEGER { $$ = new ConstantNode($1); }
     | VARIABLE { $$ = new IdentifierNode($1); }
-    | TSUB expr %prec UMINUS { $$ = opr(UMINUS, 1, $2); }
+    //| TSUB expr %prec UMINUS { $$ = opr(UMINUS, 1, $2); }
     | expr binary_operation expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
     | '(' expr ')' { $$ = $2; }
     ;
@@ -88,7 +92,6 @@ void yyerror(char const *s) {
     printf("Error: %s\n", s);
 }
 
-int main(void) {
-    yyparse();
-    return 0;
-} 
+void scan_string(const char* str) {
+    //yy_scan_string(str);
+}
