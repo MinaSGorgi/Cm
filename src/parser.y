@@ -1,8 +1,10 @@
 %{
+    #include <stdarg.h>
     #include <stdio.h>
     #include <stdlib.h>
-    #include <stdarg.h>
+    #include <string>
     #include "../include/AST.hpp"
+    using namespace std;
 
     /* prototypes */
     OperationNode *opr(int oper, int nops, ...);
@@ -15,19 +17,23 @@
     int iValue; /* integer value */
     char sIndex; /* symbol table index */
     Node *nPtr; /* node pointer */
+    string *text; /* yytext */
 };
+
+%type <nPtr> stmt expr stmt_list
+%type <text> binary_operation
 
 %token <iValue> INTEGER
 %token <sIndex> VARIABLE
+%token <text> TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT 
 %token WHILE IF PRINT
 
 %nonassoc IFX
 %nonassoc ELSE
-%left GE LE EQ NE '>' '<'
-%left '+' '-'
-%left '*' '/'
+%left TGE TLE TEQ TNE TLT TGT 
+%left TADD TSUB
+%left TMUL TDIV
 %nonassoc UMINUS
-%type <nPtr> stmt expr stmt_list
 
 %%
 program:
@@ -59,19 +65,14 @@ stmt_list:
 expr:
     INTEGER { $$ = new ConstantNode($1); }
     | VARIABLE { $$ = new IdentifierNode($1); }
-    | '-' expr %prec UMINUS { $$ = opr(UMINUS, 1, $2); }
-    | expr '+' expr { $$ = opr('+', 2, $1, $3); }
-    | expr '-' expr { $$ = opr('-', 2, $1, $3); }
-    | expr '*' expr { $$ = opr('*', 2, $1, $3); }
-    | expr '/' expr { $$ = opr('/', 2, $1, $3); }
-    | expr '<' expr { $$ = opr('<', 2, $1, $3); }
-    | expr '>' expr { $$ = opr('>', 2, $1, $3); }
-    | expr GE expr { $$ = opr(GE, 2, $1, $3); }
-    | expr LE expr { $$ = opr(LE, 2, $1, $3); }
-    | expr NE expr { $$ = opr(NE, 2, $1, $3); }
-    | expr EQ expr { $$ = opr(EQ, 2, $1, $3); }
+    | TSUB expr %prec UMINUS { $$ = opr(UMINUS, 1, $2); }
+    | expr binary_operation expr { $$ = new BinaryOperationNode($2, 2, $1, $3); }
     | '(' expr ')' { $$ = $2; }
     ;
+
+binary_operation:
+                TADD | TSUB | TMUL | TDIV | TGE | TLE | TEQ | TNE | TLT | TGT
+                ;     
 %%
 
 OperationNode *opr(int oper, int nops, ...) {

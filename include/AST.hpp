@@ -1,6 +1,8 @@
 #ifndef AST_H
 #define AST_H
 
+#include <string>
+using namespace std;
 
 class Node {
     public:
@@ -35,6 +37,17 @@ class OperationNode: public Node {
     virtual ~OperationNode();
     virtual void generateCode();
 
+};
+
+class BinaryOperationNode: public OperationNode {
+    public:
+    string *s_operation;
+
+    BinaryOperationNode(string *s_operation, const int& nOperands, Node *operand1,
+        Node *operand2): OperationNode(0, nOperands, new Node*[2]{operand1, operand2}),
+        s_operation(s_operation) { }
+    virtual void generateCode();
+    virtual ~BinaryOperationNode();
 };
 
 extern int sym[26];

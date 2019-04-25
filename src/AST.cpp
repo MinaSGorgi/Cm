@@ -55,20 +55,7 @@ void OperationNode::generateCode() {
         printf("\tneg\n");
         break;
     default:
-        operands[0]->generateCode();
-        operands[1]->generateCode();
-        switch(operation) {
-        case '+': printf("\tadd\n"); break;
-        case '-': printf("\tsub\n"); break;
-        case '*': printf("\tmul\n"); break;
-        case '/': printf("\tdiv\n"); break;
-        case '<': printf("\tcompLT\n"); break;
-        case '>': printf("\tcompGT\n"); break;
-        case GE: printf("\tcompGE\n"); break;
-        case LE: printf("\tcompLE\n"); break;
-        case NE: printf("\tcompNE\n"); break;
-        case EQ: printf("\tcompEQ\n"); break;
-        }
+        break;
     }
 }
 
@@ -77,4 +64,14 @@ OperationNode::~OperationNode() {
         delete operands[i];
     }
     delete operands;
+}
+
+void BinaryOperationNode::generateCode() {
+    operands[0]->generateCode();
+    operands[1]->generateCode();
+    printf("\t%s\n", s_operation->c_str());
+}
+
+BinaryOperationNode::~BinaryOperationNode() {
+    delete s_operation;
 }
