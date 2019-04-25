@@ -30,7 +30,7 @@ ENDIF()
 SET(IncludeDir ${CMAKE_SOURCE_DIR}/include)
 SET(SrcDir ${CMAKE_SOURCE_DIR}/src)
 
-SET(IncludeFiles ${IncludeDir}/calc3.hpp)
-SET(SrcFiles ${BisonOutput} ${FlexOutput} ${SrcDir}/compiler.cpp)
+SET(IncludeFiles ${IncludeDir}/AST.hpp)
+SET(SrcFiles ${BisonOutput} ${FlexOutput} ${SrcDir}/AST.cpp)
 
 ADD_EXECUTABLE(Cm ${IncludeFiles} ${SrcFiles})

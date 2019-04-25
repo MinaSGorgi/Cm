@@ -1,8 +1,8 @@
 %{
     #include <stdlib.h>
-    #include "../include/calc3.hpp"
+    #include "../include/AST.hpp"
     #include "parser.hpp"
-    void yyerror(char *);
+    void yyerror(char const *);
 %}
 
 %%
