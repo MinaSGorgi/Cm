@@ -26,7 +26,7 @@
 %token <iValue> INTEGER
 %token <sIndex> VARIABLE
 %token <text> TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT 
-%token WHILE IF PRINT
+%token WHILE IF
 
 %nonassoc IFX
 %nonassoc ELSE
@@ -48,7 +48,6 @@ function:
 stmt:
     ';' { $$ = opr(';', 2, NULL, NULL); }
     | expr ';' { $$ = $1; }
-    | PRINT expr ';' { $$ = opr(PRINT, 1, $2); }
     | VARIABLE '=' expr ';' { $$ = opr('=', 2, new IdentifierNode($1), $3); }
     | WHILE '(' expr ')' stmt { $$ = opr(WHILE, 2, $3, $5); }
     | IF '(' expr ')' stmt %prec IFX { $$ = opr(IF, 2, $3, $5); }

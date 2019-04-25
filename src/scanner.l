@@ -31,7 +31,6 @@
 "while"             return WHILE;
 "if"                return IF;
 "else"              return ELSE;
-"print"             return PRINT;
 
 [ \t\n]+            ; /* ignore whitespace */
 .                   yyerror((char *)"Unknown character");

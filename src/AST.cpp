@@ -42,10 +42,6 @@ void OperationNode::generateCode() {
             printf("L%03d:\n", lbl1);
         }
         break;
-    case PRINT:
-        operands[0]->generateCode();
-        printf("\tprint\n");
-        break;
     case '=':
         operands[1]->generateCode();
         printf("\tpop\t%c\n", ((IdentifierNode*)operands[0])->index + 'a');
