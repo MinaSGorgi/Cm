@@ -3,8 +3,6 @@
 #include "../build/parser.hpp"
 
 
-static int lbl;
-
 void NBlock::generateCode(Context &context) {
     for(NStatement *statement: statements) {
         statement->generateCode(context);
@@ -67,9 +65,9 @@ NControlFlowStatement::~NControlFlowStatement() {
 void NWhileStatement::generateCode(Context &context) {
     int lbl1, lbl2;
 
-    printf("L%03d:\n", lbl1 = lbl++);
+    printf("L%03d:\n", lbl1 = context.createLabel());
     expression->generateCode(context);
-    printf("\tjz\tL%03d\n", lbl2 = lbl++);
+    printf("\tjz\tL%03d\n", lbl2 = context.createLabel());
     block->generateCode(context);
     printf("\tjmp\tL%03d\n", lbl1);
     printf("L%03d:\n", lbl2);
@@ -79,10 +77,10 @@ void NIfStatement::generateCode(Context &context) {
     int lbl1, lbl2;
 
     expression->generateCode(context);
-    printf("\tjz\tL%03d\n", lbl1 = lbl++);
+    printf("\tjz\tL%03d\n", lbl1 = context.createLabel());
     block->generateCode(context);
     if (elseBlock) {       
-        printf("\tjmp\tL%03d\n", lbl2 = lbl++);
+        printf("\tjmp\tL%03d\n", lbl2 = context.createLabel());
         printf("L%03d:\n", lbl1);
         elseBlock->generateCode(context);
         printf("L%03d:\n", lbl2);
