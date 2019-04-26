@@ -2,52 +2,110 @@
 #define AST_H
 
 #include <string>
+#include <vector>
 using namespace std;
 
 class Node {
     public:
-    virtual ~Node() { }
-    virtual void generateCode() = 0;
+        virtual ~Node() { }
+        virtual void generateCode() = 0;
 };
 
-class ConstantNode: public Node {
+class NExpression: public Node {
     public:
-    const int value;
-
-    ConstantNode(const int& value): value(value) { }
-    virtual void generateCode();
+        virtual ~NExpression() { }
+        virtual void generateCode() = 0;
 };
 
-class IdentifierNode: public Node {
+class NStatement: public Node {
     public:
-    const int index;
-
-    IdentifierNode(const int& index): index(index) { }
-    virtual void generateCode();
+        virtual ~NStatement() { }
+        virtual void generateCode() = 0;
 };
 
-class OperationNode: public Node {
+class NBlock: public Node {
     public:
-    const int operation;
-    const int nOperands;
-    Node **operands;
+        vector<NStatement*> statements;
 
-    OperationNode(const int& operation, const int& nOperands, Node **operands):
-        operation(operation), nOperands(nOperands), operands(operands) { }
-    virtual ~OperationNode();
-    virtual void generateCode();
-
+        NBlock(NStatement *statement): statements(vector<NStatement*>{statement}) { }
+        virtual ~NBlock();
+        virtual void generateCode();
 };
 
-class BinaryOperationNode: public OperationNode {
+class NConstant: public NExpression {
     public:
-    string *s_operation;
+        const int value;
 
-    BinaryOperationNode(string *s_operation, const int& nOperands, Node *operand1,
-        Node *operand2): OperationNode(0, nOperands, new Node*[2]{operand1, operand2}),
-        s_operation(s_operation) { }
-    virtual void generateCode();
-    virtual ~BinaryOperationNode();
+        NConstant(const int& value): value(value) { }
+        virtual void generateCode();
+};
+
+class NIdentifier: public NExpression {
+    public:
+        const int index;
+
+        NIdentifier(const int& index): index(index) { }
+        virtual void generateCode();
+};
+
+class NBinaryOperation: public NExpression {
+    public:
+        string *operation;
+        NExpression *lhs, *rhs;
+
+        NBinaryOperation(string *operation, NExpression *lhs, NExpression *rhs):
+            operation(operation), lhs(lhs), rhs(rhs) { }
+        virtual void generateCode();
+        virtual ~NBinaryOperation();
+};
+
+class NAssignment: public NExpression {
+    public:
+        NIdentifier *id;
+        NExpression *rhs;
+
+        NAssignment(NIdentifier *id, NExpression *rhs): id(id), rhs(rhs) { }
+        virtual void generateCode();
+        virtual ~NAssignment();
+};
+
+class NExpressionStatement: public NStatement {
+    public:
+        NExpression *expression;
+
+        NExpressionStatement(NExpression *expression): expression(expression) { }
+        virtual void generateCode();
+        virtual ~NExpressionStatement();
+};
+
+class NControlFlowStatement: public NStatement {
+    public:
+        NExpression *expression;
+        NBlock *block;
+
+        NControlFlowStatement(NExpression *expression, NBlock *block): expression(expression),
+            block(block) { }
+        virtual void generateCode() = 0;
+        virtual ~NControlFlowStatement();
+};
+
+class NWhileStatement: public NControlFlowStatement {
+    public:
+        NWhileStatement(NExpression *expression, NBlock *block):
+            NControlFlowStatement(expression, block) { }
+        virtual void generateCode();
+};
+
+class NIfStatement: public NControlFlowStatement {
+    public:
+        NBlock *elseBlock;
+
+        NIfStatement(NExpression *expression, NBlock *block, NBlock *elseBlock):
+            NControlFlowStatement(expression, block), elseBlock(elseBlock) { }
+        NIfStatement(NExpression *expression, NBlock *block):
+            NIfStatement(expression, block, NULL) { }
+        virtual void generateCode();
+        virtual ~NIfStatement();
 };
 
 extern int sym[26];

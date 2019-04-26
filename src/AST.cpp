@@ -5,69 +5,94 @@
 
 static int lbl;
 
-void ConstantNode::generateCode() {
+void NBlock::generateCode() {
+    for(NStatement *statement: statements) {
+        statement->generateCode();
+    }
+}
+
+NBlock::~NBlock() {
+    for(NStatement *statement: statements) {
+        delete statement;
+    }
+}
+
+void NConstant::generateCode() {
     printf("\tpush\t%d\n", value);
 }
 
-void IdentifierNode::generateCode() {
+void NIdentifier::generateCode() {
     printf("\tpush\t%c\n", index + 'a');
 }
 
-void OperationNode::generateCode() {
+void NBinaryOperation::generateCode() {
+    lhs->generateCode();
+    rhs->generateCode();
+    printf("\t%s\n", operation->c_str());
+}
+
+NBinaryOperation::~NBinaryOperation() {
+    delete operation;
+    delete lhs;
+    delete rhs;
+}
+
+void NAssignment::generateCode() {
+    rhs->generateCode();
+    printf("\tpop\t%c\n", (id->index + 'a'));
+}
+
+NAssignment::~NAssignment() {
+    delete id;
+    delete rhs;
+}
+
+void NExpressionStatement::generateCode() {
+    if(expression) {
+        expression->generateCode();
+    }
+}
+
+NExpressionStatement::~NExpressionStatement() {
+    if(expression) {
+        delete expression;
+    }
+}
+
+NControlFlowStatement::~NControlFlowStatement() {
+    delete expression;
+    delete block;
+}
+
+void NWhileStatement::generateCode() {
     int lbl1, lbl2;
 
-    switch(operation) {
-    case WHILE:
-        printf("L%03d:\n", lbl1 = lbl++);
-        operands[0]->generateCode();
-        printf("\tjz\tL%03d\n", lbl2 = lbl++);
-        operands[1]->generateCode();
-        printf("\tjmp\tL%03d\n", lbl1);
+    printf("L%03d:\n", lbl1 = lbl++);
+    expression->generateCode();
+    printf("\tjz\tL%03d\n", lbl2 = lbl++);
+    block->generateCode();
+    printf("\tjmp\tL%03d\n", lbl1);
+    printf("L%03d:\n", lbl2);
+}
+
+void NIfStatement::generateCode() {
+    int lbl1, lbl2;
+
+    expression->generateCode();
+    printf("\tjz\tL%03d\n", lbl1 = lbl++);
+    block->generateCode();
+    if (elseBlock) {       
+        printf("\tjmp\tL%03d\n", lbl2 = lbl++);
+        printf("L%03d:\n", lbl1);
+        elseBlock->generateCode();
         printf("L%03d:\n", lbl2);
-        break;
-    case IF:
-        operands[0]->generateCode();
-        if (nOperands > 2) {
-            /* if else */
-            printf("\tjz\tL%03d\n", lbl1 = lbl++);
-            operands[1]->generateCode();
-            printf("\tjmp\tL%03d\n", lbl2 = lbl++);
-            printf("L%03d:\n", lbl1);
-            operands[2]->generateCode();
-            printf("L%03d:\n", lbl2);
-        } else {
-            /* if */
-            printf("\tjz\tL%03d\n", lbl1 = lbl++);
-            operands[1]->generateCode();
-            printf("L%03d:\n", lbl1);
-        }
-        break;
-    case '=':
-        operands[1]->generateCode();
-        printf("\tpop\t%c\n", ((IdentifierNode*)operands[0])->index + 'a');
-        break;
-    case UMINUS:
-        operands[0]->generateCode();
-        printf("\tneg\n");
-        break;
-    default:
-        break;
+    } else {
+        printf("L%03d:\n", lbl1);
     }
 }
 
-OperationNode::~OperationNode() {
-    for(int i = 0; i < nOperands; ++i) {
-        delete operands[i];
+NIfStatement::~NIfStatement() {
+    if(elseBlock) {
+        delete elseBlock;
     }
-    delete operands;
-}
-
-void BinaryOperationNode::generateCode() {
-    operands[0]->generateCode();
-    operands[1]->generateCode();
-    printf("\t%s\n", s_operation->c_str());
-}
-
-BinaryOperationNode::~BinaryOperationNode() {
-    delete s_operation;
 }
