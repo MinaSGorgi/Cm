@@ -27,6 +27,7 @@ IF(FLEX_FOUND)
     ADD_CUSTOM_COMMAND(
       OUTPUT ${FlexOutput}
       COMMAND ${FLEX_EXECUTABLE}
+              --header-file=scanner.hpp
               --outfile=${FlexOutput}
               ${SrcDir}/scanner.l
       COMMENT "Generating scanner.cpp"
