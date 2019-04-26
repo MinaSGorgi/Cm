@@ -43,12 +43,21 @@ int main() {
 
     int buffer_size = 2048;
     char output[buffer_size];
+    memset(output, 0, sizeof(output));
     FILE *f = freopen("/dev/null", "w", stdout);
     setvbuf(stdout, output, _IOFBF, buffer_size);
 
+    fflush(stdout);
     yy_scan_string(program.c_str());
     yyparse();
     fclose(f);
 
-    return expected.compare(string(output));
+    if(expected.compare(string(output)) != 0) {
+        FILE *o = fopen("testIf.txt", "w");
+        fprintf(o, "Expected:\n%sFound:\n%s", expected.c_str(), string(output).c_str());
+        fclose(o);
+        return 1;
+    } else {
+        return 0;
+    }
 }
