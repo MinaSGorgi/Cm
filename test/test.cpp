@@ -11,7 +11,6 @@ int main() {
         "}"
     "}";
     
-    
     string expected = 
     "L000:\n"      
         "\tpush	x\n"
