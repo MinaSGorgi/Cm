@@ -4,6 +4,7 @@ PROJECT(Cm)
 
 SET(IncludeDir ${CMAKE_SOURCE_DIR}/include)
 SET(SrcDir ${CMAKE_SOURCE_DIR}/src)
+SET(ResDir ${CMAKE_SOURCE_DIR}/res)
 SET(TestDir ${CMAKE_SOURCE_DIR}/test)
 SET(BuildDir ${CMAKE_SOURCE_DIR}/build)
 
@@ -16,7 +17,7 @@ IF(BISON_FOUND)
               --defines=${BuildDir}/parser.hpp
               --output=${BisonOutput}
               -v
-              ${SrcDir}/parser.y
+              ${ResDir}/parser.y
       COMMENT "Generating parser.cpp"
     )
 ENDIF()
@@ -29,7 +30,7 @@ IF(FLEX_FOUND)
       COMMAND ${FLEX_EXECUTABLE}
               --header-file=scanner.hpp
               --outfile=${FlexOutput}
-              ${SrcDir}/scanner.l
+              ${ResDir}/scanner.l
       COMMENT "Generating scanner.cpp"
     )
 ENDIF()
