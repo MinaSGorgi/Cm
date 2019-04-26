@@ -23,8 +23,12 @@ void NDouble::generateCode(Context &context) {
     printf("\tpush\t%f\n", value);
 }
 
-void NIdentifier::generateCode(Context &context) {
-    printf("\tpush\t%c\n", index + 'a');
+void NVariable::generateCode(Context &context) {
+    printf("\tpush\t%s\n", name->c_str());
+}
+
+NVariable::~NVariable() {
+    delete name;
 }
 
 void NBinaryOperation::generateCode(Context &context) {
@@ -41,7 +45,7 @@ NBinaryOperation::~NBinaryOperation() {
 
 void NAssignment::generateCode(Context &context) {
     rhs->generateCode(context);
-    printf("\tpop\t%c\n", (id->index + 'a'));
+    printf("\tpop\t%s\n", (id->name->c_str()));
 }
 
 NAssignment::~NAssignment() {

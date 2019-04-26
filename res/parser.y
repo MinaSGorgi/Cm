@@ -20,7 +20,6 @@
 %union {
     int iValue; /* integer value */
     double dValue; /* double value */
-    char sIndex; /* symbol table index */
     string *text; /* yytext */
 
     Node *pNode;
@@ -32,9 +31,8 @@
 };
 
 %token <iValue> INTEGER
-%token <dValue> TDOUBLE
-%token <sIndex> VARIABLE
-%token <text> TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT 
+%token <dValue> TDOUBLE 
+%token <text> VARIABLE TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT
 %token WHILE IF
 
 %type <pBlock> stmt_list
@@ -62,7 +60,7 @@ stmt:
     ';' { $$ = new NExpressionStatement(NULL); }
     | expr ';' { $$ = new NExpressionStatement($1); }
     | VARIABLE '=' expr ';'
-        { $$ = new NExpressionStatement(new NAssignment(new NIdentifier($1), $3)); }
+        { $$ = new NExpressionStatement(new NAssignment(new NVariable($1), $3)); }
     | WHILE '(' expr ')' '{' stmt_list '}' { $$ = new NWhileStatement($3, $6); }
     | IF '(' expr ')' '{' stmt_list '}' %prec IFX { $$ = new NIfStatement($3, $6); }
     | IF '(' expr ')' '{' stmt_list '}' ELSE '{' stmt_list '}'
@@ -77,7 +75,7 @@ stmt_list:
 expr:
     INTEGER { $$ = new NInteger($1); }
     | TDOUBLE { $$ = new NDouble($1); }
-    | VARIABLE { $$ = new NIdentifier($1); }
+    | VARIABLE { $$ = new NVariable($1); }
     | expr TADD expr { $$ = new NBinaryOperation($2, $1, $3); }
     | expr TSUB expr { $$ = new NBinaryOperation($2, $1, $3); }
     | expr TMUL expr { $$ = new NBinaryOperation($2, $1, $3); }

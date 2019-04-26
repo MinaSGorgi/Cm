@@ -49,12 +49,13 @@ class NDouble: public NExpression {
         virtual void generateCode(Context &context);
 };
 
-class NIdentifier: public NExpression {
+class NVariable: public NExpression {
     public:
-        const int index;
+        string *name;
 
-        NIdentifier(const int& index): index(index) { }
+        NVariable(string *name): name(name) { }
         virtual void generateCode(Context &context);
+        virtual ~NVariable();
 };
 
 class NBinaryOperation: public NExpression {
@@ -70,10 +71,10 @@ class NBinaryOperation: public NExpression {
 
 class NAssignment: public NExpression {
     public:
-        NIdentifier *id;
+        NVariable *id;
         NExpression *rhs;
 
-        NAssignment(NIdentifier *id, NExpression *rhs): id(id), rhs(rhs) { }
+        NAssignment(NVariable *id, NExpression *rhs): id(id), rhs(rhs) { }
         virtual void generateCode(Context &context);
         virtual ~NAssignment();
 };
