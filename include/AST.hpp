@@ -33,11 +33,19 @@ class NBlock: public Node {
         virtual void generateCode(Context &context);
 };
 
-class NConstant: public NExpression {
+class NInteger: public NExpression {
     public:
         const int value;
 
-        NConstant(const int& value): value(value) { }
+        NInteger(const int& value): value(value) { }
+        virtual void generateCode(Context &context);
+};
+
+class NDouble: public NExpression {
+    public:
+        const double value;
+
+        NDouble(const double& value): value(value) { }
         virtual void generateCode(Context &context);
 };
 

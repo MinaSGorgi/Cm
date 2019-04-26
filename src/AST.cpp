@@ -15,8 +15,12 @@ NBlock::~NBlock() {
     }
 }
 
-void NConstant::generateCode(Context &context) {
+void NInteger::generateCode(Context &context) {
     printf("\tpush\t%d\n", value);
+}
+
+void NDouble::generateCode(Context &context) {
+    printf("\tpush\t%f\n", value);
 }
 
 void NIdentifier::generateCode(Context &context) {

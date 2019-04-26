@@ -12,9 +12,8 @@
 %%
 [a-z]               SAVE_TOKEN(sIndex, *yytext - 'a', VARIABLE)
 
-0                   SAVE_TOKEN(iValue, atoi(yytext), INTEGER)
-[1-9][0-9]*         SAVE_TOKEN(iValue, atoi(yytext), INTEGER)
-
+[0-9]+"."[0-9]*     SAVE_TOKEN(dValue, atof(yytext), TDOUBLE)
+[0-9]+              SAVE_TOKEN(iValue, atoi(yytext), INTEGER)
 [=();{}.]           return *yytext;
 
 "-"                 SAVE_TOKEN(text, new string("SUB"), TSUB)

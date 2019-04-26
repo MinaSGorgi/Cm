@@ -19,6 +19,7 @@
 
 %union {
     int iValue; /* integer value */
+    double dValue; /* double value */
     char sIndex; /* symbol table index */
     string *text; /* yytext */
 
@@ -31,6 +32,7 @@
 };
 
 %token <iValue> INTEGER
+%token <dValue> TDOUBLE
 %token <sIndex> VARIABLE
 %token <text> TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT 
 %token WHILE IF
@@ -73,7 +75,8 @@ stmt_list:
     ;
 
 expr:
-    INTEGER { $$ = new NConstant($1); }
+    INTEGER { $$ = new NInteger($1); }
+    | TDOUBLE { $$ = new NDouble($1); }
     | VARIABLE { $$ = new NIdentifier($1); }
     | expr TADD expr { $$ = new NBinaryOperation($2, $1, $3); }
     | expr TSUB expr { $$ = new NBinaryOperation($2, $1, $3); }
