@@ -1,0 +1,5 @@
+ADD_EXECUTABLE(CmTest test.cpp)
+
+TARGET_LINK_LIBRARIES(CmTest CmLib)
+
+ADD_TEST(NAME Test1 COMMAND CmTest COMMENT "Running test")
