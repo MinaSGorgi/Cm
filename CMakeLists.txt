@@ -33,8 +33,8 @@ IF(FLEX_FOUND)
     )
 ENDIF()
 
-SET(IncludeFiles ${IncludeDir}/AST.hpp)
-SET(SrcFiles ${BisonOutput} ${FlexOutput} ${SrcDir}/AST.cpp)
+SET(IncludeFiles ${IncludeDir}/AST.hpp ${IncludeDir}/context.hpp)
+SET(SrcFiles ${BisonOutput} ${FlexOutput} ${SrcDir}/AST.cpp ${SrcDir}/context.cpp)
 ADD_LIBRARY(CmLib ${IncludeFiles} ${SrcFiles})
 
 ADD_EXECUTABLE(Cm ${SrcDir}/main.cpp)

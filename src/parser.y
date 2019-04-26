@@ -3,10 +3,12 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string>
+        #include "../include/context.hpp"
     using namespace std;
 
     void yyerror(char const *s);
     int sym[26]; /* symbol table */
+    Context gContext;
 %}
 
 %code requires {
@@ -50,7 +52,7 @@ program:
     ;
 
 function:
-    function stmt { $2->generateCode(); delete $2;}
+    function stmt { $2->generateCode(gContext); delete $2;}
     | /* NULL */
     ;
 

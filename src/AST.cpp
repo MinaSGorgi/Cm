@@ -5,9 +5,9 @@
 
 static int lbl;
 
-void NBlock::generateCode() {
+void NBlock::generateCode(Context &context) {
     for(NStatement *statement: statements) {
-        statement->generateCode();
+        statement->generateCode(context);
     }
 }
 
@@ -17,17 +17,17 @@ NBlock::~NBlock() {
     }
 }
 
-void NConstant::generateCode() {
+void NConstant::generateCode(Context &context) {
     printf("\tpush\t%d\n", value);
 }
 
-void NIdentifier::generateCode() {
+void NIdentifier::generateCode(Context &context) {
     printf("\tpush\t%c\n", index + 'a');
 }
 
-void NBinaryOperation::generateCode() {
-    lhs->generateCode();
-    rhs->generateCode();
+void NBinaryOperation::generateCode(Context &context) {
+    lhs->generateCode(context);
+    rhs->generateCode(context);
     printf("\t%s\n", operation->c_str());
 }
 
@@ -37,8 +37,8 @@ NBinaryOperation::~NBinaryOperation() {
     delete rhs;
 }
 
-void NAssignment::generateCode() {
-    rhs->generateCode();
+void NAssignment::generateCode(Context &context) {
+    rhs->generateCode(context);
     printf("\tpop\t%c\n", (id->index + 'a'));
 }
 
@@ -47,9 +47,9 @@ NAssignment::~NAssignment() {
     delete rhs;
 }
 
-void NExpressionStatement::generateCode() {
+void NExpressionStatement::generateCode(Context &context) {
     if(expression) {
-        expression->generateCode();
+        expression->generateCode(context);
     }
 }
 
@@ -64,27 +64,27 @@ NControlFlowStatement::~NControlFlowStatement() {
     delete block;
 }
 
-void NWhileStatement::generateCode() {
+void NWhileStatement::generateCode(Context &context) {
     int lbl1, lbl2;
 
     printf("L%03d:\n", lbl1 = lbl++);
-    expression->generateCode();
+    expression->generateCode(context);
     printf("\tjz\tL%03d\n", lbl2 = lbl++);
-    block->generateCode();
+    block->generateCode(context);
     printf("\tjmp\tL%03d\n", lbl1);
     printf("L%03d:\n", lbl2);
 }
 
-void NIfStatement::generateCode() {
+void NIfStatement::generateCode(Context &context) {
     int lbl1, lbl2;
 
-    expression->generateCode();
+    expression->generateCode(context);
     printf("\tjz\tL%03d\n", lbl1 = lbl++);
-    block->generateCode();
+    block->generateCode(context);
     if (elseBlock) {       
         printf("\tjmp\tL%03d\n", lbl2 = lbl++);
         printf("L%03d:\n", lbl1);
-        elseBlock->generateCode();
+        elseBlock->generateCode(context);
         printf("L%03d:\n", lbl2);
     } else {
         printf("L%03d:\n", lbl1);
