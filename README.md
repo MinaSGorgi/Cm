@@ -15,6 +15,13 @@ NExpressionStatement │ NVarDeclStatement            NInteger   NDouble   NVari
 NWhileStatement           NIfStatement
 ```
 
+## Data Types
+
+|Type    |Description                                                                           |
+|:------:|:------------------------------------------------------------------------------------:|
+|`int`   |An integer type ranging from -2,147,483,648 to 2,147,483,647                          |
+|`double`|A floating-point type of 15 decimal places precision ranging from 2.3E-308 to 1.7E+308|
+
 ## Operators
 
 ### Mathematical
