@@ -4,9 +4,11 @@
 
 
 void NBlock::generateCode(Context &context) {
+    context.newScope();
     for(NStatement *statement: statements) {
         statement->generateCode(context);
     }
+    context.deleteScope();
 }
 
 NBlock::~NBlock() {
