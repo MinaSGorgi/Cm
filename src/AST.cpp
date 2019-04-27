@@ -24,6 +24,7 @@ void NDouble::generateCode(Context &context) {
 }
 
 void NVariable::generateCode(Context &context) {
+    Symbol symbol = context.getSymbol(*name);
     printf("\tpush\t%s\n", name->c_str());
 }
 
@@ -45,6 +46,7 @@ NBinaryOperation::~NBinaryOperation() {
 
 void NAssignment::generateCode(Context &context) {
     rhs->generateCode(context);
+    Symbol symbol = context.getSymbol(*(id->name));
     printf("\tpop\t%s\n", (id->name->c_str()));
 }
 
@@ -63,6 +65,23 @@ NExpressionStatement::~NExpressionStatement() {
     if(expression) {
         delete expression;
     }
+}
+
+void NVarDeclStatement::generateCode(Context &context) {
+    context.insertSymbol(*varName, type);
+    switch (type)
+    {
+        case DTINT:
+            printf("\tloadi\t%s\n", varName->c_str());
+            break;
+        case DTDOUBLE:
+            printf("\tloadd\t%s\n", varName->c_str());
+            break;
+    }
+}
+
+NVarDeclStatement::~NVarDeclStatement() {
+    delete varName;
 }
 
 NControlFlowStatement::~NControlFlowStatement() {

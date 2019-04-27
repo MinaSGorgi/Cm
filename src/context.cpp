@@ -3,10 +3,10 @@
 
 
 Symbol Context::getSymbol(const string& name) {
-    deque<SymbolTable>::const_iterator table;
+    deque<SymbolTable>::reverse_iterator table;
     SymbolTable::const_iterator symbol;
 
-    for(table = symbolTables.end(); table != symbolTables.begin(); --table) {
+    for(table = symbolTables.rbegin(); table != symbolTables.rend(); ++table) {
         symbol = table->find(name);
         if(symbol != table->end()) {
             return symbol->second;
@@ -17,10 +17,10 @@ Symbol Context::getSymbol(const string& name) {
 }
 
 void Context::insertSymbol(const string& name, const int& type) {
-    if(symbolTables.end()->find(name) != symbolTables.end()->end()) {
+    if(symbolTables.back().find(name) != symbolTables.back().end()) {
         throw new MultipleDefinition(name);
     }
 
     pair<string, Symbol> symbol(name, Symbol(type));
-    symbolTables.end()->insert(symbol);
+    symbolTables.back().insert(symbol);
 }

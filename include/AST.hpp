@@ -6,6 +6,7 @@
 #include "../include/context.hpp"
 using namespace std;
 
+
 class Node {
     public:
         virtual ~Node() { }
@@ -88,6 +89,16 @@ class NExpressionStatement: public NStatement {
         virtual ~NExpressionStatement();
 };
 
+class NVarDeclStatement: public NStatement {
+    public:
+        int type;
+        string *varName;
+
+        NVarDeclStatement(int type, string *varName): type(type), varName(varName) { }
+        virtual void generateCode(Context &context);
+        virtual ~NVarDeclStatement();
+};
+
 class NControlFlowStatement: public NStatement {
     public:
         NExpression *expression;
@@ -117,7 +128,5 @@ class NIfStatement: public NControlFlowStatement {
         virtual void generateCode(Context &context);
         virtual ~NIfStatement();
 };
-
-extern int sym[26];
 
 #endif /* AST_H */

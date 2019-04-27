@@ -21,7 +21,7 @@ class Context {
         deque<SymbolTable> symbolTables;
 
     public:
-        Context(): lablesIndex(0) { }
+        Context(): lablesIndex(0) { newScope(); }
 
         int createLabel() { return lablesIndex++; }
         void insertSymbol(const string& name, const int& type);

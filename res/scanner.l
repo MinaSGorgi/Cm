@@ -13,6 +13,8 @@
 "while"                     return WHILE;
 "if"                        return IF;
 "else"                      return ELSE;
+"int"                       return DTINT;
+"double"                    return DTDOUBLE;
 
 [a-zA-Z_][a-zA-Z0-9_]*      SAVE_TOKEN(text, new string(yytext), VARIABLE)
 [0-9]+"."[0-9]*             SAVE_TOKEN(dValue, atof(yytext), TDOUBLE)

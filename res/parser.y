@@ -21,15 +21,12 @@
     double dValue; /* double value */
     string *text; /* yytext */
 
-    Node *pNode;
     NBlock *pBlock; 
     NExpression *pExpr;
     NStatement *pStmt;
-    NWhileStatement *pWhile;
-    NIfStatement *pIf;
 };
 
-%token <iValue> INTEGER
+%token <iValue> INTEGER DTINT DTDOUBLE
 %token <dValue> TDOUBLE 
 %token <text> VARIABLE TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT
 %token WHILE IF
@@ -51,7 +48,7 @@ program:
     ;
 
 function:
-    function stmt { $2->generateCode(gContext); delete $2;}
+    function stmt { $2->generateCode(gContext); /*delete $2*/;}
     | /* NULL */
     ;
 
@@ -64,6 +61,8 @@ stmt:
     | IF '(' expr ')' '{' stmt_list '}' %prec IFX { $$ = new NIfStatement($3, $6); }
     | IF '(' expr ')' '{' stmt_list '}' ELSE '{' stmt_list '}'
         { $$ = new NIfStatement($3, $6, $10); }
+    | DTINT VARIABLE ';' { $$ = new NVarDeclStatement(DTINT, $2); }
+    | DTDOUBLE VARIABLE ';' { $$ = new NVarDeclStatement(DTDOUBLE, $2); }
     ;
 
 stmt_list:
