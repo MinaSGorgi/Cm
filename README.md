@@ -6,12 +6,13 @@ C minor(Cm) is a mini version of the C programming language using Flex and Bison
 
 ```markdown
                                             Node
-                ┌────────────────────────────┴─────────────┬─────────────────────────────┐
-            Statement                                  Expression                      Block
-    ┌───────────┼───────────┐               ┌────────┬─────┼──────┐
-Expression  ControlFlow  Variable         Integer  Double  │  Identifier
-Statement               Declaration               ┌────────┴───────────┐
-                                             BinaryOperation        Assignment
+                ┌────────────────────────────┼─────────────────────────────┐
+            NStatement                    NBlock                      NExpression
+    ┌────────────────┼─────┐                           ┌─────────┬────────┼─────────┬──────────┐
+NExpressionStatement │ NVarDeclStatement            NInteger   NDouble   NVariable  │    NAssignment
+          NControlFlowStatement                                             NBinaryOperation
+        ┌────────────┴────────────┐
+NWhileStatement           NIfStatement
 ```
 
 ## Operators
