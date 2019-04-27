@@ -34,7 +34,7 @@ IF(FLEX_FOUND)
     )
 ENDIF()
 
-SET(IncludeFiles ${IncludeDir}/AST.hpp ${IncludeDir}/context.hpp)
+SET(IncludeFiles ${IncludeDir}/AST.hpp ${IncludeDir}/context.hpp ${IncludeDir}/errors.hpp)
 SET(SrcFiles ${BisonOutput} ${FlexOutput} ${SrcDir}/AST.cpp ${SrcDir}/context.cpp)
 ADD_LIBRARY(CmLib ${IncludeFiles} ${SrcFiles})
 
