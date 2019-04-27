@@ -7,7 +7,6 @@
     using namespace std;
 
     void yyerror(char const *s);
-    int sym[26]; /* symbol table */
     Context gContext;
 %}
 
