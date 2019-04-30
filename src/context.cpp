@@ -21,6 +21,6 @@ void Context::insertSymbol(const string& name, const int& type) {
         throw new MultipleDefinition(name);
     }
 
-    pair<string, Symbol> symbol(name, Symbol(type));
+    pair<string, Symbol> symbol(name, Symbol(type, createReference()));
     symbolTables.back().insert(symbol);
 }
