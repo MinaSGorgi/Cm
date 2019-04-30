@@ -3,13 +3,19 @@
 
 int main() {
     string program =
+    "int x;"
+    "int y;"
+    "int z;"
     "if(x / 2 == 1) {"
         "y = y + 1;"
     "} else {"
         "y = z - 3;"
     "}";
     
-    string expected =  
+    string expected =
+        "\tloadi\tx\n"
+        "\tloadi\ty\n"
+        "\tloadi\tz\n"
         "\tpush	x\n"
         "\tpush	2\n"
         "\tDIV\n"

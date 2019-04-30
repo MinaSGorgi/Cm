@@ -6,6 +6,7 @@
 #include "../include/context.hpp"
 using namespace std;
 
+
 class Node {
     public:
         virtual ~Node() { }
@@ -33,20 +34,29 @@ class NBlock: public Node {
         virtual void generateCode(Context &context);
 };
 
-class NConstant: public NExpression {
+class NInteger: public NExpression {
     public:
         const int value;
 
-        NConstant(const int& value): value(value) { }
+        NInteger(const int& value): value(value) { }
         virtual void generateCode(Context &context);
 };
 
-class NIdentifier: public NExpression {
+class NDouble: public NExpression {
     public:
-        const int index;
+        const double value;
 
-        NIdentifier(const int& index): index(index) { }
+        NDouble(const double& value): value(value) { }
         virtual void generateCode(Context &context);
+};
+
+class NVariable: public NExpression {
+    public:
+        string *name;
+
+        NVariable(string *name): name(name) { }
+        virtual void generateCode(Context &context);
+        virtual ~NVariable();
 };
 
 class NBinaryOperation: public NExpression {
@@ -62,10 +72,10 @@ class NBinaryOperation: public NExpression {
 
 class NAssignment: public NExpression {
     public:
-        NIdentifier *id;
+        NVariable *id;
         NExpression *rhs;
 
-        NAssignment(NIdentifier *id, NExpression *rhs): id(id), rhs(rhs) { }
+        NAssignment(NVariable *id, NExpression *rhs): id(id), rhs(rhs) { }
         virtual void generateCode(Context &context);
         virtual ~NAssignment();
 };
@@ -77,6 +87,16 @@ class NExpressionStatement: public NStatement {
         NExpressionStatement(NExpression *expression): expression(expression) { }
         virtual void generateCode(Context &context);
         virtual ~NExpressionStatement();
+};
+
+class NVarDeclStatement: public NStatement {
+    public:
+        int type;
+        string *varName;
+
+        NVarDeclStatement(int type, string *varName): type(type), varName(varName) { }
+        virtual void generateCode(Context &context);
+        virtual ~NVarDeclStatement();
 };
 
 class NControlFlowStatement: public NStatement {
@@ -108,7 +128,5 @@ class NIfStatement: public NControlFlowStatement {
         virtual void generateCode(Context &context);
         virtual ~NIfStatement();
 };
-
-extern int sym[26];
 
 #endif /* AST_H */

@@ -4,9 +4,11 @@
 
 
 void NBlock::generateCode(Context &context) {
+    context.newScope();
     for(NStatement *statement: statements) {
         statement->generateCode(context);
     }
+    context.deleteScope();
 }
 
 NBlock::~NBlock() {
@@ -15,12 +17,21 @@ NBlock::~NBlock() {
     }
 }
 
-void NConstant::generateCode(Context &context) {
+void NInteger::generateCode(Context &context) {
     printf("\tpush\t%d\n", value);
 }
 
-void NIdentifier::generateCode(Context &context) {
-    printf("\tpush\t%c\n", index + 'a');
+void NDouble::generateCode(Context &context) {
+    printf("\tpush\t%f\n", value);
+}
+
+void NVariable::generateCode(Context &context) {
+    Symbol symbol = context.getSymbol(*name);
+    printf("\tpush\t%s\n", name->c_str());
+}
+
+NVariable::~NVariable() {
+    delete name;
 }
 
 void NBinaryOperation::generateCode(Context &context) {
@@ -37,7 +48,8 @@ NBinaryOperation::~NBinaryOperation() {
 
 void NAssignment::generateCode(Context &context) {
     rhs->generateCode(context);
-    printf("\tpop\t%c\n", (id->index + 'a'));
+    Symbol symbol = context.getSymbol(*(id->name));
+    printf("\tpop\t%s\n", (id->name->c_str()));
 }
 
 NAssignment::~NAssignment() {
@@ -55,6 +67,23 @@ NExpressionStatement::~NExpressionStatement() {
     if(expression) {
         delete expression;
     }
+}
+
+void NVarDeclStatement::generateCode(Context &context) {
+    context.insertSymbol(*varName, type);
+    switch (type)
+    {
+        case DTINT:
+            printf("\tloadi\t%s\n", varName->c_str());
+            break;
+        case DTDOUBLE:
+            printf("\tloadd\t%s\n", varName->c_str());
+            break;
+    }
+}
+
+NVarDeclStatement::~NVarDeclStatement() {
+    delete varName;
 }
 
 NControlFlowStatement::~NControlFlowStatement() {

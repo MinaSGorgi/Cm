@@ -3,11 +3,13 @@
 
 int main() {
     string program =
+    "int x;"
     "while(x < 5) {"
         ";"
     "}";
     
     string expected = 
+        "\tloadi\tx\n"
     "L000:\n"      
         "\tpush	x\n"
         "\tpush	5\n"

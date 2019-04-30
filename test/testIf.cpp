@@ -3,11 +3,13 @@
 
 int main() {
     string program =
+    "int x;"
     "if(x / 2 == 1) {"
         ";"
     "};";
     
     string expected = 
+        "\tloadi\tx\n"
         "\tpush\tx\n"
         "\tpush\t2\n"
         "\tDIV\n"
