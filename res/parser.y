@@ -44,11 +44,11 @@
 
 %%
 program:
-    function { YYACCEPT; }
+    function { gContext.compile(); YYACCEPT; }
     ;
 
 function:
-    function stmt { $2->generateCode(gContext); /*delete $2*/;}
+    function stmt { $2->generateQuadruple(gContext); delete $2;}
     | /* NULL */
     ;
 

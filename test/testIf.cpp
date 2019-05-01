@@ -15,11 +15,11 @@ int main() {
     string expected;
     expected.reserve(program_len);
     string lbl1 = context.createLabel();
-    expected.append(context.createQuadruple("LOADi", 1, "x"));
-    expected.append(context.createQuadruple("DIV", 3, "%0", "x", "2"));
-    expected.append(context.createQuadruple("CEQ", 3, "%1", "%0", "1"));
-    expected.append(context.createQuadruple("JZ", 1, lbl1.c_str()));
-    expected.append(lbl1 + ":\n");
+    expected.append(AOperation("LOADi", 1, "x").toString());
+    expected.append(AOperation("DIV", 3, "%0", "x", "2").toString());
+    expected.append(AOperation("CEQ", 3, "%1", "%0", "1").toString());
+    expected.append(AOperation("JZ", 1, lbl1.c_str()).toString());
+    expected.append(ALabel(lbl1).toString());
 
     return runTest(program, expected, program_len, "If");
 }

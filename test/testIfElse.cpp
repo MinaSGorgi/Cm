@@ -19,19 +19,19 @@ int main() {
     string expected;
     expected.reserve(program_len);
     string lbl1 = context.createLabel(), lbl2 = context.createLabel();
-    expected.append(context.createQuadruple("LOADi", 1, "x"));
-    expected.append(context.createQuadruple("LOADi", 1, "y"));
-    expected.append(context.createQuadruple("LOADi", 1, "z"));
-    expected.append(context.createQuadruple("DIV", 3, "%0", "x", "2"));
-    expected.append(context.createQuadruple("CEQ", 3, "%1", "%0", "1"));
-    expected.append(context.createQuadruple("JZ", 1, lbl1.c_str()));
-    expected.append(context.createQuadruple("ADD", 3, "%2", "y", "1"));
-    expected.append(context.createQuadruple("MOV", 2, "y", "%2"));
-    expected.append(context.createQuadruple("JMP", 1, lbl2.c_str()));
-    expected.append(lbl1 + ":\n");
-    expected.append(context.createQuadruple("SUB", 3, "%3", "z", "3"));
-    expected.append(context.createQuadruple("MOV", 2, "y", "%3"));
-    expected.append(lbl2 + ":\n");
+    expected.append(AOperation("LOADi", 1, "x").toString());
+    expected.append(AOperation("LOADi", 1, "y").toString());
+    expected.append(AOperation("LOADi", 1, "z").toString());
+    expected.append(AOperation("DIV", 3, "%0", "x", "2").toString());
+    expected.append(AOperation("CEQ", 3, "%1", "%0", "1").toString());
+    expected.append(AOperation("JZ", 1, lbl1.c_str()).toString());
+    expected.append(AOperation("ADD", 3, "%2", "y", "1").toString());
+    expected.append(AOperation("MOV", 2, "y", "%2").toString());
+    expected.append(AOperation("JMP", 1, lbl2.c_str()).toString());
+    expected.append(ALabel(lbl1).toString());
+    expected.append(AOperation("SUB", 3, "%3", "z", "3").toString());
+    expected.append(AOperation("MOV", 2, "y", "%3").toString());
+    expected.append(ALabel(lbl2).toString());
 
     return runTest(program, expected, program_len, "IfElse");
 }

@@ -10,4 +10,4 @@ TARGET_LINK_LIBRARIES(testWhile CmLib)
 
 ADD_TEST(NAME testIf COMMAND testIf COMMENT "Running testIf")
 ADD_TEST(NAME testIfElse COMMAND testIfElse COMMENT "Running testIfElse")
-ADD_TEST(NAME testWhile COMMAND testIf COMMENT "Running testWhile")
+ADD_TEST(NAME testWhile COMMAND testWhile COMMENT "Running testWhile")

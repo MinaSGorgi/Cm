@@ -4,7 +4,7 @@
 
 int main() {
     Context context;
-    int program_len = 512;
+    int program_len = 1024;
 
     string program =
     "int x;"
@@ -12,21 +12,15 @@ int main() {
         ";"
     "}";
     
-    "L000:\n"      
-        "\tCLT\t%0, x, 5\n"
-        "\tjz	L001\n"
-        "\tjmp	L000\n"
-    "L001:\n";
-
     string expected;
     expected.reserve(program_len);
     string lbl1 = context.createLabel(), lbl2 = context.createLabel();
-    expected.append(context.createQuadruple("LOADi", 1, "x"));
-    expected.append(lbl1 + ":\n");
-    expected.append(context.createQuadruple("CLT", 3, "%1", "%0", "1"));
-    expected.append(context.createQuadruple("JZ", 1, lbl1.c_str()));
-    expected.append(context.createQuadruple("JZ", 1, lbl2.c_str()));
-    expected.append(lbl2 + ":\n");
+    expected.append(AOperation("LOADi", 1, "x").toString());
+    expected.append(ALabel(lbl1).toString());
+    expected.append(AOperation("CLT", 3, "%0", "x", "5").toString());
+    expected.append(AOperation("JZ", 1, lbl2.c_str()).toString());
+    expected.append(AOperation("JMP", 1, lbl1.c_str()).toString());
+    expected.append(ALabel(lbl2).toString());
 
     return runTest(program, expected, program_len, "While");
 }

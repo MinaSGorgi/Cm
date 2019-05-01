@@ -10,19 +10,19 @@ using namespace std;
 class Node {
     public:
         virtual ~Node() { }
-        virtual Symbol generateCode(Context &context) = 0;
+        virtual Symbol generateQuadruple(Context &context) = 0;
 };
 
 class NExpression: public Node {
     public:
         virtual ~NExpression() { }
-        virtual Symbol generateCode(Context &context) = 0;
+        virtual Symbol generateQuadruple(Context &context) = 0;
 };
 
 class NStatement: public Node {
     public:
         virtual ~NStatement() { }
-        virtual Symbol generateCode(Context &context) = 0;
+        virtual Symbol generateQuadruple(Context &context) = 0;
 };
 
 class NBlock: public Node {
@@ -31,7 +31,7 @@ class NBlock: public Node {
 
         NBlock(NStatement *statement): statements(vector<NStatement*>{statement}) { }
         virtual ~NBlock();
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
 };
 
 class NInteger: public NExpression {
@@ -39,7 +39,7 @@ class NInteger: public NExpression {
         const int value;
 
         NInteger(const int& value): value(value) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
 };
 
 class NDouble: public NExpression {
@@ -47,7 +47,7 @@ class NDouble: public NExpression {
         const double value;
 
         NDouble(const double& value): value(value) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
 };
 
 class NVariable: public NExpression {
@@ -55,7 +55,7 @@ class NVariable: public NExpression {
         string *name;
 
         NVariable(string *name): name(name) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
         virtual ~NVariable();
 };
 
@@ -66,7 +66,7 @@ class NBinaryOperation: public NExpression {
 
         NBinaryOperation(string *operation, NExpression *lhs, NExpression *rhs):
             operation(operation), lhs(lhs), rhs(rhs) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
         virtual ~NBinaryOperation();
 };
 
@@ -76,7 +76,7 @@ class NAssignment: public NExpression {
         NExpression *rhs;
 
         NAssignment(NVariable *id, NExpression *rhs): id(id), rhs(rhs) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
         virtual ~NAssignment();
 };
 
@@ -85,7 +85,7 @@ class NExpressionStatement: public NStatement {
         NExpression *expression;
 
         NExpressionStatement(NExpression *expression): expression(expression) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
         virtual ~NExpressionStatement();
 };
 
@@ -95,7 +95,7 @@ class NVarDeclStatement: public NStatement {
         string *varName;
 
         NVarDeclStatement(int type, string *varName): type(type), varName(varName) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
         virtual ~NVarDeclStatement();
 };
 
@@ -106,7 +106,7 @@ class NControlFlowStatement: public NStatement {
 
         NControlFlowStatement(NExpression *expression, NBlock *block): expression(expression),
             block(block) { }
-        virtual Symbol generateCode(Context &context) = 0;
+        virtual Symbol generateQuadruple(Context &context) = 0;
         virtual ~NControlFlowStatement();
 };
 
@@ -114,7 +114,7 @@ class NWhileStatement: public NControlFlowStatement {
     public:
         NWhileStatement(NExpression *expression, NBlock *block):
             NControlFlowStatement(expression, block) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
 };
 
 class NIfStatement: public NControlFlowStatement {
@@ -125,7 +125,7 @@ class NIfStatement: public NControlFlowStatement {
             NControlFlowStatement(expression, block), elseBlock(elseBlock) { }
         NIfStatement(NExpression *expression, NBlock *block):
             NIfStatement(expression, block, NULL) { }
-        virtual Symbol generateCode(Context &context);
+        virtual Symbol generateQuadruple(Context &context);
         virtual ~NIfStatement();
 };
 
