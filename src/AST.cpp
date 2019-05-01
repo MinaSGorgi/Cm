@@ -1,14 +1,17 @@
+#include <iostream>
 #include <stdio.h>
 #include "../include/AST.hpp"
 #include "../build/parser.hpp"
+using namespace std;
 
 
-void NBlock::generateCode(Context &context) {
+Symbol NBlock::generateCode(Context &context) {
     context.newScope();
     for(NStatement *statement: statements) {
         statement->generateCode(context);
     }
     context.deleteScope();
+    return Symbol(DTVOID, "");
 }
 
 NBlock::~NBlock() {
@@ -17,27 +20,31 @@ NBlock::~NBlock() {
     }
 }
 
-void NInteger::generateCode(Context &context) {
-    printf("\tpush\t%d\n", value);
+Symbol NInteger::generateCode(Context &context) {
+    return Symbol(DTINT, to_string(value));
 }
 
-void NDouble::generateCode(Context &context) {
-    printf("\tpush\t%f\n", value);
+Symbol NDouble::generateCode(Context &context) {
+    return Symbol(DTDOUBLE, to_string(value));
 }
 
-void NVariable::generateCode(Context &context) {
-    Symbol symbol = context.getSymbol(*name);
-    printf("\tpush\t%s\n", name->c_str());
+Symbol NVariable::generateCode(Context &context) {
+    return context.getSymbol(*name);
 }
 
 NVariable::~NVariable() {
     delete name;
 }
 
-void NBinaryOperation::generateCode(Context &context) {
-    lhs->generateCode(context);
-    rhs->generateCode(context);
-    printf("\t%s\n", operation->c_str());
+Symbol NBinaryOperation::generateCode(Context &context) {
+    Symbol slhs = lhs->generateCode(context);
+    Symbol srhs = rhs->generateCode(context);
+    // TODO: check types 
+    Symbol result = Symbol(DTINT, context.createReference());
+
+    cout << context.createQuadruple(*operation, 3, result.reference.c_str(), slhs.reference.c_str(),
+           srhs.reference.c_str());
+    return result;
 }
 
 NBinaryOperation::~NBinaryOperation() {
@@ -46,10 +53,13 @@ NBinaryOperation::~NBinaryOperation() {
     delete rhs;
 }
 
-void NAssignment::generateCode(Context &context) {
-    rhs->generateCode(context);
-    Symbol symbol = context.getSymbol(*(id->name));
-    printf("\tpop\t%s\n", (id->name->c_str()));
+Symbol NAssignment::generateCode(Context &context) {
+    Symbol srhs = rhs->generateCode(context);
+    Symbol var = context.getSymbol(*(id->name));
+
+    // TODO: optimize for a var on both sides
+    cout << context.createQuadruple("MOV", 2, id->name->c_str(), srhs.reference.c_str());
+    return var;
 }
 
 NAssignment::~NAssignment() {
@@ -57,10 +67,11 @@ NAssignment::~NAssignment() {
     delete rhs;
 }
 
-void NExpressionStatement::generateCode(Context &context) {
+Symbol NExpressionStatement::generateCode(Context &context) {
     if(expression) {
         expression->generateCode(context);
     }
+    return Symbol(DTVOID, "");
 }
 
 NExpressionStatement::~NExpressionStatement() {
@@ -69,17 +80,20 @@ NExpressionStatement::~NExpressionStatement() {
     }
 }
 
-void NVarDeclStatement::generateCode(Context &context) {
+Symbol NVarDeclStatement::generateCode(Context &context) {
     context.insertSymbol(*varName, type);
     switch (type)
     {
         case DTINT:
-            printf("\tloadi\t%s\n", varName->c_str());
+            cout << context.createQuadruple("LOADi", 1, varName->c_str());
             break;
         case DTDOUBLE:
-            printf("\tloadd\t%s\n", varName->c_str());
+            cout << context.createQuadruple("LOADd", 1, varName->c_str());
+            break;
+        default:
             break;
     }
+    return Symbol(DTVOID, "");
 }
 
 NVarDeclStatement::~NVarDeclStatement() {
@@ -91,31 +105,33 @@ NControlFlowStatement::~NControlFlowStatement() {
     delete block;
 }
 
-void NWhileStatement::generateCode(Context &context) {
-    int lbl1, lbl2;
+Symbol NWhileStatement::generateCode(Context &context) {
+    string lbl1 = context.createLabel(), lbl2 = context.createLabel();
 
-    printf("L%03d:\n", lbl1 = context.createLabel());
+    cout << lbl1 << ":\n";
     expression->generateCode(context);
-    printf("\tjz\tL%03d\n", lbl2 = context.createLabel());
+    cout << context.createQuadruple("JZ", 1, lbl2.c_str());
     block->generateCode(context);
-    printf("\tjmp\tL%03d\n", lbl1);
-    printf("L%03d:\n", lbl2);
+    cout << context.createQuadruple("JMP", 1, lbl1.c_str());
+    cout << lbl2 << ":\n";
+    return Symbol(DTVOID, "");
 }
 
-void NIfStatement::generateCode(Context &context) {
-    int lbl1, lbl2;
+Symbol NIfStatement::generateCode(Context &context) {
+    string lbl1 = context.createLabel(), lbl2 = context.createLabel();
 
     expression->generateCode(context);
-    printf("\tjz\tL%03d\n", lbl1 = context.createLabel());
+    cout << context.createQuadruple("JZ", 1, lbl1.c_str());
     block->generateCode(context);
-    if (elseBlock) {       
-        printf("\tjmp\tL%03d\n", lbl2 = context.createLabel());
-        printf("L%03d:\n", lbl1);
+    if (elseBlock) {
+        cout << context.createQuadruple("JMP", 1, lbl2.c_str());
+        cout << lbl1 << ":\n";
         elseBlock->generateCode(context);
-        printf("L%03d:\n", lbl2);
+        cout << lbl2 << ":\n";
     } else {
-        printf("L%03d:\n", lbl1);
+        cout << lbl1 << ":\n";
     }
+    return Symbol(DTVOID, "");
 }
 
 NIfStatement::~NIfStatement() {

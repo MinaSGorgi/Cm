@@ -26,7 +26,7 @@
     NStatement *pStmt;
 };
 
-%token <iValue> INTEGER DTINT DTDOUBLE
+%token <iValue> INTEGER DTINT DTDOUBLE DTVOID
 %token <dValue> TDOUBLE 
 %token <text> VARIABLE TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT
 %token WHILE IF

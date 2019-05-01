@@ -25,8 +25,10 @@ class Context {
     public:
         Context(): lablesIndex(0), referencesIndex(0) { newScope(); }
 
-        int createLabel() { return lablesIndex++; }
+        string createQuadruple(string instruction, int numOperands, ...);
+        string createLabel() { return "L" + to_string(lablesIndex++); }
         string createReference() { return "%" + to_string(referencesIndex++); }
+        
         void insertSymbol(const string& name, const int& type);
         Symbol getSymbol(const string& name);
         void newScope() { symbolTables.push_back(SymbolTable()); }
