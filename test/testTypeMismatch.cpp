@@ -9,14 +9,17 @@ int main() {
 
     string program =
     "int x;"
-    "x + 3;";
+    "double y;"
+    "x = 3;"
+    "y = 3.0;" 
+    "x = x + y;";
 
     string expected = "";
 
     try {
-        runTest(program, expected, program_len, "Uninitialized");
+        runTest(program, expected, program_len, "TypeMismatch");
         return 1;
-    } catch(const Uninitialized& e) {
+    } catch(const TypeMismatch& e) {
         return 0;
     }
 }

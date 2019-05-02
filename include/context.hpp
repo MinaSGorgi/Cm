@@ -45,6 +45,7 @@ class Symbol {
         Symbol(const int& type, const bool& constant, const bool& initialized,
             const string& reference): type(type), constant(constant), initialized(initialized),
             reference(reference) { }
+        string getType();
 };
 
 class Context {

@@ -3,6 +3,7 @@
 #include <iterator>
 #include "../include/context.hpp"
 #include "../include/errors.hpp"
+#include "../build/parser.hpp"
 
 
 AOperation::AOperation(string instruction, int numOperands, ...): instruction(instruction) {
@@ -25,6 +26,17 @@ string AOperation::toString() {
         quadruple += operands[operands.size() - 1] + "\n";
     }
     return quadruple;
+}
+
+string Symbol::getType() {
+    switch(type) {
+        case DTINT:
+            return "int";
+        case DTDOUBLE:
+            return "double";
+        default:
+            return "void";
+    }
 }
 
 void Context::compile() {

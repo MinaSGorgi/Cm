@@ -40,8 +40,11 @@ NVariable::~NVariable() {
 Symbol NBinaryOperation::generateQuadruple(Context &context) {
     Symbol slhs = lhs->generateQuadruple(context);
     Symbol srhs = rhs->generateQuadruple(context);
-    // TODO: check types 
-    Symbol result = Symbol(DTINT, true, true, context.createReference());
+    if(slhs.type != srhs.type) {
+        throw TypeMismatch(slhs.reference, srhs.reference, slhs.getType(), srhs.getType());
+    }
+
+    Symbol result = Symbol(slhs.type, true, true, context.createReference());
     if(!slhs.initialized) {
         throw Uninitialized(slhs.reference);
     }
@@ -49,8 +52,8 @@ Symbol NBinaryOperation::generateQuadruple(Context &context) {
         throw Uninitialized(srhs.reference);
     }
 
-    context.addQuadruple(new AOperation(*operation, 3, result.reference.c_str(), slhs.reference.c_str(),
-           srhs.reference.c_str()));
+    context.addQuadruple(new AOperation(*operation, 3, result.reference.c_str(),
+                                        slhs.reference.c_str(), srhs.reference.c_str()));
     return result;
 }
 
@@ -63,6 +66,9 @@ NBinaryOperation::~NBinaryOperation() {
 Symbol NAssignment::generateQuadruple(Context &context) {
     Symbol srhs = rhs->generateQuadruple(context);
     Symbol *var = context.getSymbol(*(id->name));
+    if(var->type != srhs.type) {
+        throw TypeMismatch(var->reference, srhs.reference, var->getType(), srhs.getType());
+    }
     if(var->constant) {
         throw ReadOnly(var->reference.c_str());
     }

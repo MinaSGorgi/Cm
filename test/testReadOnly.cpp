@@ -16,7 +16,7 @@ int main() {
     try {
         runTest(program, expected, program_len, "ReadOnly");
         return 1;
-    } catch(ReadOnly e) {
+    } catch(const ReadOnly& e) {
         return 0;
     }
 }
