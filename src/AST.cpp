@@ -91,7 +91,7 @@ Symbol NAssignment::generateQuadruple(Context &context) {
     }
     var->initialized = true;
 
-    context.addQuadruple(new AOperation("MOV", 2, id->name->c_str(), srhs.reference.c_str()));
+    context.addQuadruple(new AOperation("MOV", 2, var->reference.c_str(), srhs.reference.c_str()));
 
     return *var;
 }
@@ -115,26 +115,27 @@ NExpressionStatement::~NExpressionStatement() {
 }
 
 Symbol NVarDeclStatement::generateQuadruple(Context &context) {
+    Symbol *symbol = context.insertSymbol(*varName, type, false, constant);
+    string symbolName = symbol->reference;
+
     switch (type)
     {
         case DTINT:
-            context.addQuadruple(new AOperation("LOADi", 1, varName->c_str()));
+            context.addQuadruple(new AOperation("LOADi", 1, symbolName.c_str()));
             break;
         case DTDOUBLE:
-            context.addQuadruple(new AOperation("LOADd", 1, varName->c_str()));
+            context.addQuadruple(new AOperation("LOADd", 1, symbolName.c_str()));
             break;
         default:
             break;
     }
 
-    bool initialized = false;
     if(rhs) {
-        initialized = true;
+        symbol->setInitialized();
         Symbol srhs = rhs->generateQuadruple(context);
-        context.addQuadruple(new AOperation("MOV", 2, varName->c_str(), srhs.reference.c_str()));
+        context.addQuadruple(new AOperation("MOV", 2, symbolName.c_str(), srhs.reference.c_str()));
     }
 
-    context.insertSymbol(*varName, type, initialized, constant);
     return Symbol(DTVOID, true, true, "");
 }
 

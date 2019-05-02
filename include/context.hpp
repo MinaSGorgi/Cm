@@ -46,6 +46,7 @@ class Symbol {
             const string& reference): type(type), constant(constant), initialized(initialized),
             reference(reference) { }
         string getType();
+        void setInitialized(bool init=true) { initialized = init; }
 };
 
 class Context {
@@ -64,7 +65,7 @@ class Context {
         string createLabel() { return "L" + to_string(lablesIndex++); }
         string createReference() { return "%" + to_string(referencesIndex++); }
         
-        void insertSymbol(const string& name, const int& type, const bool& initialized,
+        Symbol *insertSymbol(const string& name, const int& type, const bool& initialized,
             const bool& constant);
         Symbol *getSymbol(const string& name);
         void newScope() { symbolTables.push_back(SymbolTable()); }

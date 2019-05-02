@@ -15,13 +15,13 @@ int main() {
     string expected;
     expected.reserve(program_len);
     string lbl1 = context.createLabel(), lbl2 = context.createLabel();
-    expected.append(AOperation("LOADi", 1, "x").toString());
-    expected.append(AOperation("MOV", 2, "x", "1").toString());
+    expected.append(AOperation("LOADi", 1, "x%0").toString());
+    expected.append(AOperation("MOV", 2, "x%0", "1").toString());
     expected.append(ALabel(lbl1).toString());
-    expected.append(AOperation("CLT", 3, "%0", "x", "5").toString());
+    expected.append(AOperation("CLT", 3, "%0", "x%0", "5").toString());
     expected.append(AOperation("JZ", 1, lbl2.c_str()).toString());
-    expected.append(AOperation("ADD", 3, "%1", "x", "1").toString());
-    expected.append(AOperation("MOV", 2, "x", "%1").toString());
+    expected.append(AOperation("ADD", 3, "%1", "x%0", "1").toString());
+    expected.append(AOperation("MOV", 2, "x%0", "%1").toString());
     expected.append(AOperation("JMP", 1, lbl1.c_str()).toString());
     expected.append(ALabel(lbl2).toString());
 

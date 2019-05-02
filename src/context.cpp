@@ -62,12 +62,15 @@ Symbol* Context::getSymbol(const string& name) {
     throw UndefinedReference(name);
 }
 
-void Context::insertSymbol(const string& name, const int& type, const bool& initialized,
+Symbol* Context::insertSymbol(const string& name, const int& type, const bool& initialized,
     const bool& constant) {
     if(symbolTables.back().find(name) != symbolTables.back().end()) {
         throw MultipleDefinition(name);
     }
 
-    pair<string, Symbol> symbol(name, Symbol(type, constant, initialized, name));
-    symbolTables.back().insert(symbol);
+    int scopeIndex = symbolTables.end() - symbolTables.begin() - 1;
+    string reference = name + "%" + to_string(scopeIndex);
+    pair<string, Symbol> symbolEntry(name, Symbol(type, constant, initialized, reference));
+    symbolTables.back().insert(symbolEntry);
+    return &((--symbolTables.back().end())->second);
 }
