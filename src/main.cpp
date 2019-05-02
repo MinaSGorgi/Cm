@@ -4,16 +4,25 @@
 
 
 int main(int argc, char **argv) {
+    ifstream inpFile;
+    FILE *outFile;
 
     if(argc > 1) {
-        ifstream file(argv[1]);
-        string program((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
+        inpFile.open(argv[1]);
+        string program((istreambuf_iterator<char>(inpFile)), istreambuf_iterator<char>());
         yy_scan_string(program.c_str());
-        yyparse();
-        file.close();
-    } else {
-        yyparse();
+        if(argc > 2) {
+            outFile = freopen(argv[2], "w", stdout);
+        }
     }
+    
+    yyparse();
 
+    if(argc > 1) {
+        inpFile.close();
+        if(argc > 2) {
+            fclose(outFile);
+        }
+    }
     return 0;
 } 
