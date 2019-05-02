@@ -83,12 +83,12 @@ NWhileStatement           NIfStatement
 |-------------------|-------------------------------------------------|
 |`LOADi $1`         |Reserve memory for integer variable $1           |
 |`LOADd $1`         |Reserve memory for double variable $1            |
-|`ADD $1, $2, $3`   |$3 = $1 + $2                                     |
-|`SUB $1, $2, $3`   |$3 = $1 - $2                                     |
-|`MUL $1, $2, $3`   |$3 = $1 * $2                                     |
-|`DIV $1, $2, $3`   |$3 = $1 / $2                                     |
-|`NOT $1, $2`       |$2 = !$1                                         |
-|`MOV $1, $2`       |$2 = $1                                          |
+|`ADD $1, $2, $3`   |$1 = $2 + $3                                     |
+|`SUB $1, $2, $3`   |$1 = $2 - $3                                     |
+|`MUL $1, $2, $3`   |$1 = $2 * $3                                     |
+|`DIV $1, $2, $3`   |$1 = $2 / $3                                     |
+|`NOT $1, $2`       |$1 = !$2                                         |
+|`MOV $1, $2`       |$1 = $2                                          |
 |`CLT $1, $2`       |Evaluates to One if $1 < $2 else zero            |
 |`CGT $1, $2`       |Evaluates to One if $1 > $2 else zero            |
 |`CGE $1, $2`       |Evaluates to One if $1 >= $2 else zero           |
