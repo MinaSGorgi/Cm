@@ -55,6 +55,7 @@ Symbol* Context::getSymbol(const string& name) {
     for(table = symbolTables.rbegin(); table != symbolTables.rend(); ++table) {
         symbol = table->find(name);
         if(symbol != table->end()) {
+            symbol->second.setUsed();
             return &(symbol->second);
         }
     }

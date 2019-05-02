@@ -39,14 +39,15 @@ class Symbol {
     public:
         const int type;
         const bool constant;
-        bool initialized;
+        bool initialized, used;
         string reference;
 
         Symbol(const int& type, const bool& constant, const bool& initialized,
-            const string& reference): type(type), constant(constant), initialized(initialized),
-            reference(reference) { }
+            const string& reference, bool used=false): type(type), constant(constant),
+            initialized(initialized), reference(reference), used(used) { }
         string getType();
         void setInitialized(bool init=true) { initialized = init; }
+        void setUsed(bool use=true) { used = use; }
 };
 
 class Context {
