@@ -39,4 +39,15 @@ public:
     }
 };
 
+class Uninitialized: public exception {
+    const string symbol;
+
+public:
+    Uninitialized(const string& symbol): symbol(symbol) {}
+
+    virtual const char* what() const throw() {
+        return ("The variable: " + symbol + " is being used without being initialized").c_str();
+    }
+};
+
 #endif /* ERRORS_H */

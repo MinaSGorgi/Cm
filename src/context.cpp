@@ -36,25 +36,26 @@ void Context::compile() {
     } 
 }
 
-Symbol Context::getSymbol(const string& name) {
+Symbol* Context::getSymbol(const string& name) {
     deque<SymbolTable>::reverse_iterator table;
-    SymbolTable::const_iterator symbol;
+    SymbolTable::iterator symbol;
 
     for(table = symbolTables.rbegin(); table != symbolTables.rend(); ++table) {
         symbol = table->find(name);
         if(symbol != table->end()) {
-            return symbol->second;
+            return &(symbol->second);
         }
     }
 
     throw UndefinedReference(name);
 }
 
-void Context::insertSymbol(const string& name, const int& type, const bool& constant) {
+void Context::insertSymbol(const string& name, const int& type, const bool& initialized,
+    const bool& constant) {
     if(symbolTables.back().find(name) != symbolTables.back().end()) {
         throw MultipleDefinition(name);
     }
 
-    pair<string, Symbol> symbol(name, Symbol(type, constant, name));
+    pair<string, Symbol> symbol(name, Symbol(type, constant, initialized, name));
     symbolTables.back().insert(symbol);
 }

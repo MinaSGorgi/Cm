@@ -8,6 +8,7 @@ int main() {
 
     string program =
     "int x;"
+    "x = 1;"
     "while(x < 5) {"
         ";"
     "}";
@@ -16,6 +17,7 @@ int main() {
     expected.reserve(program_len);
     string lbl1 = context.createLabel(), lbl2 = context.createLabel();
     expected.append(AOperation("LOADi", 1, "x").toString());
+    expected.append(AOperation("MOV", 2, "x", "1").toString());
     expected.append(ALabel(lbl1).toString());
     expected.append(AOperation("CLT", 3, "%0", "x", "5").toString());
     expected.append(AOperation("JZ", 1, lbl2.c_str()).toString());

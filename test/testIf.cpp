@@ -8,6 +8,7 @@ int main() {
 
     string program =
     "int x;"
+    "x = 3;"
     "if(x / 2 == 1) {"
         ";"
     "};";
@@ -16,6 +17,7 @@ int main() {
     expected.reserve(program_len);
     string lbl1 = context.createLabel();
     expected.append(AOperation("LOADi", 1, "x").toString());
+    expected.append(AOperation("MOV", 2, "x", "3").toString());
     expected.append(AOperation("DIV", 3, "%0", "x", "2").toString());
     expected.append(AOperation("CEQ", 3, "%1", "%0", "1").toString());
     expected.append(AOperation("JZ", 1, lbl1.c_str()).toString());
