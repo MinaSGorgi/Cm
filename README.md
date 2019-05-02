@@ -15,6 +15,15 @@ NExpressionStatement │ NVarDeclStatement            NInteger   NDouble   NVari
 NWhileStatement           NIfStatement
 ```
 
+## Symbol Table
+
+|Member       |Data Type|Description                                  |
+|:-----------:|:-------:|---------------------------------------------|
+|`type`       |`int`    |Used for raising TypeMismatch exception      |
+|`constant`   |`bool`   |Used for raising ReadOnly exception          |
+|`initialized`|`bool`   |Used for raising Uninitialized exception     |
+|`reference`  |`string` |Used for referencing the symbol in quadruples|
+
 ## Data Types
 
 |Type    |Description                                                                           |
