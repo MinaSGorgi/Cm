@@ -56,12 +56,14 @@ class Context {
         int referencesIndex;
         deque<SymbolTable> symbolTables;
         list<AQuadruple*> program;
+        list<string> unused;
 
     public:
         Context(): lablesIndex(0), referencesIndex(0) { newScope(); }
 
         void addQuadruple(AQuadruple *quadruple) { program.push_back(quadruple); }
         void compile();
+        void printWarnings();
 
         string createLabel() { return "L" + to_string(lablesIndex++); }
         string createReference() { return "%" + to_string(referencesIndex++); }
@@ -70,7 +72,7 @@ class Context {
             const bool& constant);
         Symbol *getSymbol(const string& name);
         void newScope() { symbolTables.push_back(SymbolTable()); }
-        void deleteScope() { symbolTables.pop_back(); }
+        void deleteScope();
 };
 
 #endif /* CONTEXT_H */

@@ -44,7 +44,7 @@
 
 %%
 program:
-    function { gContext.compile(); YYACCEPT; }
+    function { gContext.deleteScope(); gContext.compile(); YYACCEPT; }
     ;
 
 function:

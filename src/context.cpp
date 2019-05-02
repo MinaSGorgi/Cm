@@ -45,7 +45,16 @@ void Context::compile() {
     for(it = program.begin(); it != program.end(); ++it) {
         cout << (*it)->toString();
         delete (*it);
-    } 
+    }
+
+    printWarnings();
+}
+
+void Context::printWarnings() {
+    list<string>::iterator symbol;
+    for(symbol = unused.begin(); symbol != unused.end(); ++symbol) {
+        cout << "Warning: variable `" + (*symbol) + "` is not used\n";
+    }
 }
 
 Symbol* Context::getSymbol(const string& name) {
@@ -74,4 +83,16 @@ Symbol* Context::insertSymbol(const string& name, const int& type, const bool& i
     pair<string, Symbol> symbolEntry(name, Symbol(type, constant, initialized, reference));
     symbolTables.back().insert(symbolEntry);
     return &((--symbolTables.back().end())->second);
+}
+
+void Context::deleteScope() {
+    SymbolTable table = symbolTables.back();
+    SymbolTable::iterator symbol;;
+    for(symbol = table.begin(); symbol != table.end(); ++symbol) {
+        if(!(symbol->second.used)) {
+            unused.push_back(symbol->second.reference);
+        }
+    }
+
+    symbolTables.pop_back();
 }

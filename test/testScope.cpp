@@ -10,7 +10,8 @@ int main() {
     "int x;"
     "x = 1;"
     "while(x < 5) {"
-        "const int x = 3;"
+        "int x;"
+        "x = 3;"
     "}";
     
     string expected;
