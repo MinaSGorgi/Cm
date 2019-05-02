@@ -28,4 +28,15 @@ public:
     }
 };
 
+class ReadOnly: public exception {
+    const string symbol;
+
+public:
+    ReadOnly(const string& symbol): symbol(symbol) {}
+
+    virtual const char* what() const throw() {
+        return ("Assignment of read-only variable: " + symbol).c_str();
+    }
+};
+
 #endif /* ERRORS_H */

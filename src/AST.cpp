@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include "../include/AST.hpp"
+#include "../include/errors.hpp"
 #include "../build/parser.hpp"
 using namespace std;
 
@@ -11,7 +12,7 @@ Symbol NBlock::generateQuadruple(Context &context) {
         statement->generateQuadruple(context);
     }
     context.deleteScope();
-    return Symbol(DTVOID, "");
+    return Symbol(DTVOID, true, "");
 }
 
 NBlock::~NBlock() {
@@ -21,11 +22,11 @@ NBlock::~NBlock() {
 }
 
 Symbol NInteger::generateQuadruple(Context &context) {
-    return Symbol(DTINT, to_string(value));
+    return Symbol(DTINT, true, to_string(value));
 }
 
 Symbol NDouble::generateQuadruple(Context &context) {
-    return Symbol(DTDOUBLE, to_string(value));
+    return Symbol(DTDOUBLE, true, to_string(value));
 }
 
 Symbol NVariable::generateQuadruple(Context &context) {
@@ -40,7 +41,7 @@ Symbol NBinaryOperation::generateQuadruple(Context &context) {
     Symbol slhs = lhs->generateQuadruple(context);
     Symbol srhs = rhs->generateQuadruple(context);
     // TODO: check types 
-    Symbol result = Symbol(DTINT, context.createReference());
+    Symbol result = Symbol(DTINT, true, context.createReference());
 
     context.addQuadruple(new AOperation(*operation, 3, result.reference.c_str(), slhs.reference.c_str(),
            srhs.reference.c_str()));
@@ -56,6 +57,9 @@ NBinaryOperation::~NBinaryOperation() {
 Symbol NAssignment::generateQuadruple(Context &context) {
     Symbol srhs = rhs->generateQuadruple(context);
     Symbol var = context.getSymbol(*(id->name));
+    if(var.constant) {
+        throw ReadOnly(var.reference.c_str());
+    }
 
     context.addQuadruple(new AOperation("MOV", 2, id->name->c_str(), srhs.reference.c_str()));
     return var;
@@ -70,7 +74,7 @@ Symbol NExpressionStatement::generateQuadruple(Context &context) {
     if(expression) {
         expression->generateQuadruple(context);
     }
-    return Symbol(DTVOID, "");
+    return Symbol(DTVOID, true, "");
 }
 
 NExpressionStatement::~NExpressionStatement() {
@@ -80,7 +84,7 @@ NExpressionStatement::~NExpressionStatement() {
 }
 
 Symbol NVarDeclStatement::generateQuadruple(Context &context) {
-    context.insertSymbol(*varName, type);
+    context.insertSymbol(*varName, type, constant);
     switch (type)
     {
         case DTINT:
@@ -92,11 +96,19 @@ Symbol NVarDeclStatement::generateQuadruple(Context &context) {
         default:
             break;
     }
-    return Symbol(DTVOID, "");
+    if(rhs) {
+        Symbol srhs = rhs->generateQuadruple(context);
+        context.addQuadruple(new AOperation("MOV", 2, varName->c_str(), srhs.reference.c_str()));
+    }
+
+    return Symbol(DTVOID, true, "");
 }
 
 NVarDeclStatement::~NVarDeclStatement() {
     delete varName;
+    if(rhs) {
+        delete rhs;
+    }
 }
 
 NControlFlowStatement::~NControlFlowStatement() {
@@ -113,7 +125,7 @@ Symbol NWhileStatement::generateQuadruple(Context &context) {
     block->generateQuadruple(context);
     context.addQuadruple(new AOperation("JMP", 1, lbl1.c_str()));
     context.addQuadruple(new ALabel(lbl2));
-    return Symbol(DTVOID, "");
+    return Symbol(DTVOID, true, "");
 }
 
 Symbol NIfStatement::generateQuadruple(Context &context) {
@@ -130,7 +142,7 @@ Symbol NIfStatement::generateQuadruple(Context &context) {
     } else {
         context.addQuadruple(new ALabel(lbl1));
     }
-    return Symbol(DTVOID, "");
+    return Symbol(DTVOID, true, "");
 }
 
 NIfStatement::~NIfStatement() {

@@ -92,9 +92,12 @@ class NExpressionStatement: public NStatement {
 class NVarDeclStatement: public NStatement {
     public:
         int type;
+        bool constant;
         string *varName;
+        NExpression *rhs;
 
-        NVarDeclStatement(int type, string *varName): type(type), varName(varName) { }
+        NVarDeclStatement(int type, bool constant, string *varName, NExpression *rhs): type(type),
+            constant(constant), varName(varName), rhs(rhs) { }
         virtual Symbol generateQuadruple(Context &context);
         virtual ~NVarDeclStatement();
 };

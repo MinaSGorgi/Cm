@@ -38,9 +38,11 @@ class ALabel: public AQuadruple {
 class Symbol {
     public:
         const int type;
+        const bool constant;
         string reference;
 
-        Symbol(const int& type, const string& reference): type(type), reference(reference) { }
+        Symbol(const int& type, const bool& constant, const string& reference): type(type),
+            constant(constant), reference(reference) { }
 };
 
 class Context {
@@ -59,7 +61,7 @@ class Context {
         string createLabel() { return "L" + to_string(lablesIndex++); }
         string createReference() { return "%" + to_string(referencesIndex++); }
         
-        void insertSymbol(const string& name, const int& type);
+        void insertSymbol(const string& name, const int& type, const bool& constant);
         Symbol getSymbol(const string& name);
         void newScope() { symbolTables.push_back(SymbolTable()); }
         void deleteScope() { symbolTables.pop_back(); }

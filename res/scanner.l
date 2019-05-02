@@ -13,6 +13,7 @@
 "while"                     return WHILE;
 "if"                        return IF;
 "else"                      return ELSE;
+"const"                     return CONSTANT;
 "int"                       return DTINT;
 "double"                    return DTDOUBLE;
 

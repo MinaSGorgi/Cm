@@ -47,14 +47,14 @@ Symbol Context::getSymbol(const string& name) {
         }
     }
 
-    throw new UndefinedReference(name);
+    throw UndefinedReference(name);
 }
 
-void Context::insertSymbol(const string& name, const int& type) {
+void Context::insertSymbol(const string& name, const int& type, const bool& constant) {
     if(symbolTables.back().find(name) != symbolTables.back().end()) {
-        throw new MultipleDefinition(name);
+        throw MultipleDefinition(name);
     }
 
-    pair<string, Symbol> symbol(name, Symbol(type, name));
+    pair<string, Symbol> symbol(name, Symbol(type, constant, name));
     symbolTables.back().insert(symbol);
 }
