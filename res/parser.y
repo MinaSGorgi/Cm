@@ -28,7 +28,7 @@
 
 %token <iValue> INTEGER DTINT DTDOUBLE DTVOID CONSTANT
 %token <dValue> TDOUBLE 
-%token <text> VARIABLE TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT
+%token <text> VARIABLE TNOT TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT
 %token WHILE IF
 
 %type <pBlock> stmt_list
@@ -40,7 +40,7 @@
 %left TGE TLE TEQ TNE TLT TGT 
 %left TADD TSUB
 %left TMUL TDIV
-%nonassoc UMINUS
+%right TNOT
 
 %%
 program:
@@ -87,6 +87,7 @@ expr:
     | expr TNE expr { $$ = new NBinaryOperation($2, $1, $3); }
     | expr TLT expr { $$ = new NBinaryOperation($2, $1, $3); }
     | expr TGT expr { $$ = new NBinaryOperation($2, $1, $3); }
+    | TNOT expr { $$ = new NUnaryOperation($1, $2); }
     | '(' expr ')' { $$ = $2; }
     ;
 %%

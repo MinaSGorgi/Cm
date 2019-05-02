@@ -59,6 +59,16 @@ class NVariable: public NExpression {
         virtual ~NVariable();
 };
 
+class NUnaryOperation: public NExpression {
+    public:
+        string *operation;
+        NExpression *expr;
+
+        NUnaryOperation(string *operation, NExpression *expr): operation(operation), expr(expr) { }
+        virtual Symbol generateQuadruple(Context &context);
+        virtual ~NUnaryOperation();
+};
+
 class NBinaryOperation: public NExpression {
     public:
         string *operation;

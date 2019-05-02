@@ -37,6 +37,23 @@ NVariable::~NVariable() {
     delete name;
 }
 
+Symbol NUnaryOperation::generateQuadruple(Context &context) {
+    Symbol sexpr = expr->generateQuadruple(context);
+    Symbol result = Symbol(sexpr.type, true, true, context.createReference());
+    if(!sexpr.initialized) {
+        throw Uninitialized(sexpr.reference);
+    }
+
+    context.addQuadruple(new AOperation(*operation, 2, result.reference.c_str(),
+                                        sexpr.reference.c_str()));
+    return result;
+}
+
+NUnaryOperation::~NUnaryOperation() {
+    delete operation;
+    delete expr;
+}
+
 Symbol NBinaryOperation::generateQuadruple(Context &context) {
     Symbol slhs = lhs->generateQuadruple(context);
     Symbol srhs = rhs->generateQuadruple(context);

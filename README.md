@@ -8,9 +8,9 @@ C minor(Cm) is a mini version of the C programming language using Flex and Bison
                                             Node
                 ┌────────────────────────────┼─────────────────────────────┐
             NStatement                    NBlock                      NExpression
-    ┌────────────────┼─────┐                           ┌─────────┬────────┼─────────┬──────────┐
-NExpressionStatement │ NVarDeclStatement            NInteger   NDouble   NVariable  │    NAssignment
-          NControlFlowStatement                                             NBinaryOperation
+    ┌────────────────┼─────┐                           ┌─────┬───┬───────┼─────────┬──────────┐
+NExpressionStatement │ NVarDeclStatement            NInteger │ NDouble   NVariable │    NAssignment
+          NControlFlowStatement                        NUnaryOperation      NBinaryOperation
         ┌────────────┴────────────┐
 NWhileStatement           NIfStatement
 ```
@@ -54,6 +54,12 @@ NWhileStatement           NIfStatement
 |`>=`    |Checks if the value of left operand is greater than or equal the value of right operand|
 |`<=`    |Checks if the value of left operand is less than or equal the value of right operand   |
 
+### Logical
+
+|Operator|Description         |
+|:------:|--------------------|
+|`!`     |Logical NOT operator|
+
 ### Assignment
 
 |Operator|Description                                                 |
@@ -64,6 +70,7 @@ NWhileStatement           NIfStatement
 
 |Operator   |Associativity|
 |:---------:|-------------|
+|`!`        |Right to left|
 |`* /`      |Left to right|
 |`+ -`      |Left to right|
 |`< <= > >=`|Left to right|
@@ -80,6 +87,7 @@ NWhileStatement           NIfStatement
 |`SUB $1, $2, $3`   |$3 = $1 - $2                                     |
 |`MUL $1, $2, $3`   |$3 = $1 * $2                                     |
 |`DIV $1, $2, $3`   |$3 = $1 / $2                                     |
+|`NOT $1, $2`       |$2 = !$1                                         |
 |`MOV $1, $2`       |$2 = $1                                          |
 |`CLT $1, $2`       |Evaluates to One if $1 < $2 else zero            |
 |`CGT $1, $2`       |Evaluates to One if $1 > $2 else zero            |
