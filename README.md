@@ -22,6 +22,7 @@ NWhileStatement   NForStatement   NIfStatement
 |`type`       |`int`    |Used for raising TypeMismatch exception      |
 |`constant`   |`bool`   |Used for raising ReadOnly exception          |
 |`initialized`|`bool`   |Used for raising Uninitialized exception     |
+|`used`       |`bool`   |Used for raising not used warnings           |
 |`reference`  |`string` |Used for referencing the symbol in quadruples|
 
 ## Data Types
