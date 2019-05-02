@@ -114,28 +114,41 @@ class NVarDeclStatement: public NStatement {
 
 class NControlFlowStatement: public NStatement {
     public:
-        NExpression *expression;
         NBlock *block;
 
-        NControlFlowStatement(NExpression *expression, NBlock *block): expression(expression),
-            block(block) { }
+        NControlFlowStatement(NBlock *block): block(block) { }
         virtual Symbol generateQuadruple(Context &context) = 0;
         virtual ~NControlFlowStatement();
 };
 
 class NWhileStatement: public NControlFlowStatement {
     public:
-        NWhileStatement(NExpression *expression, NBlock *block):
-            NControlFlowStatement(expression, block) { }
+        NExpression *expression;
+
+        NWhileStatement(NExpression *expression, NBlock *block): NControlFlowStatement(block),
+            expression(expression) { }
         virtual Symbol generateQuadruple(Context &context);
+        virtual ~NWhileStatement();
+};
+
+class NForStatement: public NControlFlowStatement {
+    NStatement *statement1, *statement2, *statement3;
+
+    public:
+        NForStatement(NStatement *statement1, NStatement *statement2, NStatement *statement3,
+            NBlock *block): NControlFlowStatement(block), statement1(statement1),
+            statement2(statement2), statement3(statement3) { }
+        virtual Symbol generateQuadruple(Context &context);
+        virtual ~NForStatement();
 };
 
 class NIfStatement: public NControlFlowStatement {
     public:
+        NExpression *expression;
         NBlock *elseBlock;
 
         NIfStatement(NExpression *expression, NBlock *block, NBlock *elseBlock):
-            NControlFlowStatement(expression, block), elseBlock(elseBlock) { }
+            NControlFlowStatement(block), expression(expression), elseBlock(elseBlock) { }
         NIfStatement(NExpression *expression, NBlock *block):
             NIfStatement(expression, block, NULL) { }
         virtual Symbol generateQuadruple(Context &context);

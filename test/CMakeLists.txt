@@ -1,5 +1,6 @@
 SET(TestIncludeFiles test.hpp)
 
+ADD_EXECUTABLE(testFor testFor.cpp ${TestIncludeFiles})
 ADD_EXECUTABLE(testIf testIf.cpp ${TestIncludeFiles})
 ADD_EXECUTABLE(testIfElse testIfElse.cpp ${TestIncludeFiles})
 ADD_EXECUTABLE(testReadOnly testReadOnly.cpp ${TestIncludeFiles})
@@ -8,6 +9,7 @@ ADD_EXECUTABLE(testUnary testUnary.cpp ${TestIncludeFiles})
 ADD_EXECUTABLE(testUninitialized testUninitialized.cpp ${TestIncludeFiles})
 ADD_EXECUTABLE(testWhile testWhile.cpp ${TestIncludeFiles})
 
+TARGET_LINK_LIBRARIES(testFor CmLib)
 TARGET_LINK_LIBRARIES(testIf CmLib)
 TARGET_LINK_LIBRARIES(testIfElse CmLib)
 TARGET_LINK_LIBRARIES(testReadOnly CmLib)
@@ -16,6 +18,7 @@ TARGET_LINK_LIBRARIES(testUnary CmLib)
 TARGET_LINK_LIBRARIES(testUninitialized CmLib)
 TARGET_LINK_LIBRARIES(testWhile CmLib)
 
+ADD_TEST(NAME testFor COMMAND testFor COMMENT "Running testFor")
 ADD_TEST(NAME testIf COMMAND testIf COMMENT "Running testIf")
 ADD_TEST(NAME testIfElse COMMAND testIfElse COMMENT "Running testIfElse")
 ADD_TEST(NAME testReadOnly COMMAND testReadOnly COMMENT "Running testReadOnly")

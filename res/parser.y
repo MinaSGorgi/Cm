@@ -29,10 +29,10 @@
 %token <iValue> INTEGER DTINT DTDOUBLE DTVOID CONSTANT
 %token <dValue> TDOUBLE 
 %token <text> VARIABLE TNOT TADD TSUB TMUL TDIV TGE TLE TEQ TNE TLT TGT
-%token WHILE IF
+%token WHILE FOR IF
 
 %type <pBlock> stmt_list
-%type <pStmt> stmt
+%type <pStmt> simple_stmt complex_stmt stmt
 %type <pExpr> expr
 
 %nonassoc IFX
@@ -53,14 +53,23 @@ function:
     ;
 
 stmt:
+    simple_stmt | complex_stmt { $$ = $1; }
+    ;
+
+complex_stmt:
+    WHILE '(' expr ')' '{' stmt_list '}' { $$ = new NWhileStatement($3, $6); }
+    | FOR '(' simple_stmt simple_stmt simple_stmt ')' '{' stmt_list '}'
+        { $$ = new NForStatement($3, $4, $5, $8); }
+    | IF '(' expr ')' '{' stmt_list '}' %prec IFX { $$ = new NIfStatement($3, $6); }
+    | IF '(' expr ')' '{' stmt_list '}' ELSE '{' stmt_list '}'
+        { $$ = new NIfStatement($3, $6, $10); }
+    ;
+
+simple_stmt:
     ';' { $$ = new NExpressionStatement(NULL); }
     | expr ';' { $$ = new NExpressionStatement($1); }
     | VARIABLE '=' expr ';'
         { $$ = new NExpressionStatement(new NAssignment(new NVariable($1), $3)); }
-    | WHILE '(' expr ')' '{' stmt_list '}' { $$ = new NWhileStatement($3, $6); }
-    | IF '(' expr ')' '{' stmt_list '}' %prec IFX { $$ = new NIfStatement($3, $6); }
-    | IF '(' expr ')' '{' stmt_list '}' ELSE '{' stmt_list '}'
-        { $$ = new NIfStatement($3, $6, $10); }
     | DTINT VARIABLE ';' { $$ = new NVarDeclStatement(DTINT, false, $2, NULL); }
     | DTDOUBLE VARIABLE ';' { $$ = new NVarDeclStatement(DTDOUBLE, false, $2, NULL); }
     | CONSTANT DTINT VARIABLE '=' expr ';' { $$ = new NVarDeclStatement(DTINT, true, $3, $5); }
@@ -69,8 +78,8 @@ stmt:
     ;
 
 stmt_list:
-    stmt { $$ = new NBlock($1); }
-    | stmt_list stmt { $1->statements.push_back($<pStmt>2); }
+    simple_stmt { $$ = new NBlock($1); }
+    | stmt_list simple_stmt { $1->statements.push_back($<pStmt>2); }
     ;
 
 expr:

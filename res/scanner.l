@@ -11,6 +11,7 @@
 
 %%
 "while"                     return WHILE;
+"for"                       return FOR;
 "if"                        return IF;
 "else"                      return ELSE;
 "const"                     return CONSTANT;

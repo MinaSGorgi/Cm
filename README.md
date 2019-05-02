@@ -11,8 +11,8 @@ C minor(Cm) is a mini version of the C programming language using Flex and Bison
     ┌────────────────┼─────┐                           ┌─────┬───┬───────┼─────────┬──────────┐
 NExpressionStatement │ NVarDeclStatement            NInteger │ NDouble   NVariable │    NAssignment
           NControlFlowStatement                        NUnaryOperation      NBinaryOperation
-        ┌────────────┴────────────┐
-NWhileStatement           NIfStatement
+        ┌────────────┼─────────────────┐
+NWhileStatement   NForStatement   NIfStatement
 ```
 
 ## Symbol Table

@@ -146,7 +146,6 @@ NVarDeclStatement::~NVarDeclStatement() {
 }
 
 NControlFlowStatement::~NControlFlowStatement() {
-    delete expression;
     delete block;
 }
 
@@ -160,6 +159,30 @@ Symbol NWhileStatement::generateQuadruple(Context &context) {
     context.addQuadruple(new AOperation("JMP", 1, lbl1.c_str()));
     context.addQuadruple(new ALabel(lbl2));
     return Symbol(DTVOID, true, true, "");
+}
+
+NWhileStatement::~NWhileStatement() {
+    delete expression;
+}
+
+Symbol NForStatement::generateQuadruple(Context &context) {
+    string lbl1 = context.createLabel(), lbl2 = context.createLabel();
+
+    statement1->generateQuadruple(context);
+    context.addQuadruple(new ALabel(lbl1));
+    statement2->generateQuadruple(context);
+    context.addQuadruple(new AOperation("JZ", 1, lbl2.c_str()));
+    block->generateQuadruple(context);
+    statement3->generateQuadruple(context);
+    context.addQuadruple(new AOperation("JMP", 1, lbl1.c_str()));
+    context.addQuadruple(new ALabel(lbl2));
+    return Symbol(DTVOID, true, true, "");
+}
+
+NForStatement::~NForStatement() {
+    delete statement1;
+    delete statement2;
+    delete statement3;
 }
 
 Symbol NIfStatement::generateQuadruple(Context &context) {
@@ -180,6 +203,7 @@ Symbol NIfStatement::generateQuadruple(Context &context) {
 }
 
 NIfStatement::~NIfStatement() {
+    delete expression;
     if(elseBlock) {
         delete elseBlock;
     }
