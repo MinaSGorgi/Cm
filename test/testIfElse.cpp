@@ -30,7 +30,7 @@ int main() {
     expected.append(AOperation("MOV", 2, "z%0", "4").toString());
     expected.append(AOperation("DIV", 3, "%0", "x%0", "2").toString());
     expected.append(AOperation("CEQ", 3, "%1", "%0", "1").toString());
-    expected.append(AOperation("JZ", 1, lbl1.c_str()).toString());
+    expected.append(AOperation("JZ", 2, "%1", lbl1.c_str()).toString());
     expected.append(AOperation("ADD", 3, "%2", "y%0", "1").toString());
     expected.append(AOperation("MOV", 2, "y%0", "%2").toString());
     expected.append(AOperation("JMP", 1, lbl2.c_str()).toString());

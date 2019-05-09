@@ -103,9 +103,11 @@ NAssignment::~NAssignment() {
 
 Symbol NExpressionStatement::generateQuadruple(Context &context) {
     if(expression) {
-        expression->generateQuadruple(context);
+        Symbol result = expression->generateQuadruple(context);
+        return result;
+    } else {
+        return Symbol(DTVOID, true, true, "$ExprStat");
     }
-    return Symbol(DTVOID, true, true, "");
 }
 
 NExpressionStatement::~NExpressionStatement() {
@@ -154,8 +156,8 @@ Symbol NWhileStatement::generateQuadruple(Context &context) {
     string lbl1 = context.createLabel(), lbl2 = context.createLabel();
 
     context.addQuadruple(new ALabel(lbl1));
-    expression->generateQuadruple(context);
-    context.addQuadruple(new AOperation("JZ", 1, lbl2.c_str()));
+    Symbol condition = expression->generateQuadruple(context);
+    context.addQuadruple(new AOperation("JZ", 2, condition.reference.c_str(), lbl2.c_str()));
     block->generateQuadruple(context);
     context.addQuadruple(new AOperation("JMP", 1, lbl1.c_str()));
     context.addQuadruple(new ALabel(lbl2));
@@ -171,8 +173,8 @@ Symbol NForStatement::generateQuadruple(Context &context) {
 
     statement1->generateQuadruple(context);
     context.addQuadruple(new ALabel(lbl1));
-    statement2->generateQuadruple(context);
-    context.addQuadruple(new AOperation("JZ", 1, lbl2.c_str()));
+    Symbol condition = statement2->generateQuadruple(context);
+    context.addQuadruple(new AOperation("JZ", 2, condition.reference.c_str(), lbl2.c_str()));
     block->generateQuadruple(context);
     statement3->generateQuadruple(context);
     context.addQuadruple(new AOperation("JMP", 1, lbl1.c_str()));
@@ -189,8 +191,8 @@ NForStatement::~NForStatement() {
 Symbol NIfStatement::generateQuadruple(Context &context) {
     string lbl1 = context.createLabel(), lbl2 = context.createLabel();
 
-    expression->generateQuadruple(context);
-    context.addQuadruple(new AOperation("JZ", 1, lbl1.c_str()));
+    Symbol condition = expression->generateQuadruple(context);
+    context.addQuadruple(new AOperation("JZ", 2, condition.reference.c_str(), lbl1.c_str()));
     block->generateQuadruple(context);
     if (elseBlock) {
         context.addQuadruple(new AOperation("JMP", 1, lbl2.c_str()));
