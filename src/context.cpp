@@ -47,11 +47,13 @@ void Context::compile() {
         if((*curr)->instruction == "NOT") {
             list <AQuadruple*>::iterator next = ++curr;
             --curr;
-            if((*next)->instruction == "JZ" || (*next)->instruction == "JNZ") {
-                (*next)->instruction = (*next)->instruction == "JNZ" ? "JZ" : "JNZ";
-                (*next)->operands[0] = (*curr)->operands[1];
-                program.remove(*curr);
-                curr = next;
+            if((*next)->operands[0] == (*curr)->operands[0]) {
+                if((*next)->instruction == "JZ" || (*next)->instruction == "JNZ") {
+                    (*next)->instruction = (*next)->instruction == "JNZ" ? "JZ" : "JNZ";
+                    (*next)->operands[0] = (*curr)->operands[1];
+                    program.remove(*curr);
+                    curr = next;
+                }
             }
         }
         cout << (*curr)->toString();
