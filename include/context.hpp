@@ -15,24 +15,24 @@ typedef map<string, Symbol> SymbolTable;
 
 class AQuadruple {
     public:
+        string instruction;
+        vector<string> operands;
+
         virtual string toString() = 0;
 };
 
 class AOperation: public AQuadruple {
     public:
-        string instruction;
-        vector<string> operands;
-
         AOperation(string instruction, int numOperands, ...);
         virtual string toString();
+        virtual string getLoaded() { return operands[0]; }
+        virtual vector<string> getUsed() { return operands; }
 };
 
 class ALabel: public AQuadruple {
     public:
-        string label;
-
-        ALabel(string label): label(label) { }
-        virtual string toString() { return label + ":\n"; }
+        ALabel(string label) { instruction = label; }
+        virtual string toString() { return instruction + ":\n"; }
 };
 
 class Symbol {

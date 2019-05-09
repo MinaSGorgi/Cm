@@ -6,7 +6,8 @@
 #include "../build/parser.hpp"
 
 
-AOperation::AOperation(string instruction, int numOperands, ...): instruction(instruction) {
+AOperation::AOperation(string instruction, int numOperands, ...) {
+    this->instruction = instruction;
     operands.reserve(numOperands);
     va_list arguments;                   
     va_start(arguments, numOperands);
@@ -41,10 +42,20 @@ string Symbol::getType() {
 
 void Context::compile() {
     // TODO: add optimizations
-    list <AQuadruple*>::iterator it; 
-    for(it = program.begin(); it != program.end(); ++it) {
-        cout << (*it)->toString();
-        delete (*it);
+    list <AQuadruple*>::iterator curr; 
+    for(curr = program.begin(); curr != program.end(); ++curr) {
+        if((*curr)->instruction == "NOT") {
+            list <AQuadruple*>::iterator next = ++curr;
+            --curr;
+            if((*next)->instruction == "JZ" || (*next)->instruction == "JNZ") {
+                (*next)->instruction = (*next)->instruction == "JNZ" ? "JZ" : "JNZ";
+                (*next)->operands[0] = (*curr)->operands[1];
+                program.remove(*curr);
+                curr = next;
+            }
+        }
+        cout << (*curr)->toString();
+        delete (*curr);
     }
 
     printWarnings();
