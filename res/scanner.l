@@ -6,6 +6,8 @@
     #define SAVE_TOKEN(member, value, token) { yylval.member = value; return token; }
     #define SAVE_STRING_TOKEN(member, value, token) { yylval.member = value; return token; }
 
+    static int gLine = 0;
+
     void yyerror(char const *);
 %}
 
@@ -35,8 +37,9 @@
 "=="                        SAVE_TOKEN(text, new string("CEQ"), TEQ)
 "!="                        SAVE_TOKEN(text, new string("CNE"), TNE)
 
-[ \t\n]+                    ; /* ignore whitespace */
-.                           yyerror((char *)"Unknown character");
+[ \t]+                      ; /* ignore whitespace */
+'\n'                        ++gLine;
+.                           yyerror((string(yytext) + " at line: "+ to_string(gLine + 1)).c_str());
 %%
 
 int yywrap(void) {

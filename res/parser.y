@@ -102,5 +102,6 @@ expr:
 %%
 
 void yyerror(char const *s) {
-    printf("Error: %s\n", s);
+    printf("Unexpected token: %s\n", s);
+    exit(0);
 }
