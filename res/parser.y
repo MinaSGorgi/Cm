@@ -53,7 +53,8 @@ function:
     ;
 
 stmt:
-    simple_stmt | complex_stmt { $$ = $1; }
+    simple_stmt { $$ = $1; }
+    | complex_stmt { $$ = $1; }
     ;
 
 complex_stmt:
@@ -78,8 +79,8 @@ simple_stmt:
     ;
 
 stmt_list:
-    simple_stmt { $$ = new NBlock($1); }
-    | stmt_list simple_stmt { $1->statements.push_back($<pStmt>2); }
+    stmt { $$ = new NBlock($1); }
+    | stmt_list stmt { $1->statements.push_back($<pStmt>2); }
     ;
 
 expr:
